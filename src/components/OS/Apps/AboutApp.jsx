@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';  // Fix import path
+import './App.css';  
 
 const AboutApp = () => {
   return (

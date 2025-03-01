@@ -2,8 +2,9 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faUser, faEnvelope, faFolderOpen, faCode, 
-  faFile, faTerminal, faCog, faGlobe 
+  faFile, faTerminal, faCog, faGlobe
 } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import './AppLauncher.css';
 
 const AppLauncher = ({ onAppClick }) => {
@@ -20,15 +21,16 @@ const AppLauncher = ({ onAppClick }) => {
       apps: [
         { id: 'projects', name: 'Projects', icon: faFolderOpen },
         { id: 'skills', name: 'Skills', icon: faCode },
+        { id: 'github', name: 'GitHub', icon: faGithub },
         { id: 'resume', name: 'Resume', icon: faFile }
       ]
     },
     {
       name: 'Tools',
       apps: [
+        { id: 'browser', name: 'Browser', icon: faGlobe },
         { id: 'terminal', name: 'Terminal', icon: faTerminal },
-        { id: 'settings', name: 'Settings', icon: faCog },
-        { id: 'browser', name: 'Browser', icon: faGlobe }
+        { id: 'settings', name: 'Settings', icon: faCog }
       ]
     }
   ];

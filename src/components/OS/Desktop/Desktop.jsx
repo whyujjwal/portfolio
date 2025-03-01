@@ -1,6 +1,7 @@
 import React from 'react';
 import DesktopIcon from './DesktopIcon';
-import { faUser, faFolderOpen, faCode, faEnvelope, faTerminal } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faFolderOpen, faCode, faEnvelope, faTerminal, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import './Desktop.css';
 
 const Desktop = ({ onAppClick }) => {
@@ -9,6 +10,8 @@ const Desktop = ({ onAppClick }) => {
     { id: 'projects', name: 'Projects', icon: faFolderOpen },
     { id: 'skills', name: 'Skills', icon: faCode },
     { id: 'contact', name: 'Contact', icon: faEnvelope },
+    { id: 'github', name: 'GitHub', icon: faGithub },
+    { id: 'browser', name: 'Browser', icon: faGlobe },
     { id: 'terminal', name: 'Terminal', icon: faTerminal },
   ];
 

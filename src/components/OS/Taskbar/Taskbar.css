@@ -1,14 +1,16 @@
 .taskbar {
-  height: 45px;
-  background: rgba(5, 15, 30, 0.7);
+  height: 48px;
+  background: rgba(8, 15, 30, 0.85);
   backdrop-filter: blur(15px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 15px;
   z-index: 1000;
-  border-top: 1px solid rgba(100, 140, 255, 0.2);
-  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+  border-top: 1px solid var(--glass-border);
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+  margin-top: auto; /* Push to bottom when in flex container */
+  flex-shrink: 0; /* Prevent taskbar from shrinking */
 }
 
 .taskbar-left {
@@ -17,29 +19,52 @@
 }
 
 .launcher-button {
-  width: 35px;
-  height: 35px;
+  width: 38px;
+  height: 38px;
   border: none;
-  background: rgba(80, 120, 255, 0.2);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(79, 116, 255, 0.2);
+  color: var(--text-light);
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 12px;
   transition: all 0.3s;
   border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.launcher-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(120deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.2) 40%,
+    rgba(255, 255, 255, 0) 60%);
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+
+.launcher-button:hover::before {
+  transform: translateX(100%);
 }
 
 .launcher-button:hover {
-  background-color: rgba(80, 120, 255, 0.4);
-  transform: scale(1.1);
+  background-color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(79, 116, 255, 0.5);
 }
 
 .launcher-button.active {
-  background-color: rgba(80, 120, 255, 0.6);
-  box-shadow: 0 0 15px rgba(80, 120, 255, 0.5);
+  background: linear-gradient(120deg, var(--primary-color), var(--accent-color));
+  box-shadow: 0 0 15px rgba(79, 116, 255, 0.7);
 }
 
 .taskbar-apps {
@@ -50,41 +75,69 @@
 
 .taskbar-app {
   height: 35px;
-  padding: 0 12px;
+  padding: 0 14px;
   margin: 0 3px;
   border: none;
-  background: rgba(60, 80, 120, 0.3);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(80, 100, 140, 0.2);
+  color: var(--text-light);
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: all 0.2s;
-  border-radius: 8px;
+  transition: all 0.3s;
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.taskbar-app::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-100%);
+  transition: transform 1s;
+}
+
+.taskbar-app:hover::before {
+  transform: translateX(100%);
 }
 
 .taskbar-app:hover {
-  background-color: rgba(80, 120, 255, 0.3);
-  transform: translateY(-3px);
+  background-color: rgba(79, 116, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 .taskbar-app.active {
-  background-color: rgba(80, 120, 255, 0.4);
-  box-shadow: 0 0 10px rgba(80, 120, 255, 0.3);
+  background: linear-gradient(90deg, 
+    rgba(79, 116, 255, 0.5) 0%, 
+    rgba(0, 208, 255, 0.5) 100%);
+  box-shadow: 0 0 10px rgba(79, 116, 255, 0.4);
 }
 
 .taskbar-app.minimized {
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
 .taskbar-app.minimized:hover {
-  opacity: 0.9;
+  opacity: 1;
+}
+
+.taskbar-app svg {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
 }
 
 .taskbar-app span {
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .taskbar-right {
@@ -96,8 +149,8 @@
   width: 35px;
   height: 35px;
   border: none;
-  background: rgba(60, 80, 120, 0.3);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(80, 100, 140, 0.2);
+  color: var(--text-light);
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -108,16 +161,17 @@
 }
 
 .taskbar-settings:hover {
-  background-color: rgba(80, 120, 255, 0.3);
-  transform: scale(1.1);
+  background-color: rgba(79, 116, 255, 0.3);
+  transform: scale(1.1) rotate(30deg);
 }
 
 .taskbar-time {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-light);
   font-size: 14px;
   margin-left: 15px;
   font-weight: 500;
-  background: rgba(60, 80, 120, 0.3);
-  padding: 5px 12px;
-  border-radius: 8px;
+  background: rgba(80, 100, 140, 0.2);
+  padding: 6px 14px;
+  border-radius: 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }

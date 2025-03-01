@@ -5,9 +5,30 @@
 }
 
 :root {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Updated color scheme with better contrast */
+  --primary-color: #5080ff;
+  --primary-dark: #3c68db;
+  --primary-light: #80a8ff;
+  --accent-color: #00d8ff;
+  --dark-bg: #0d1528;
+  --darker-bg: #081020;
+  --medium-bg: #192b4d;
+  --light-bg: #2a3c64;
+  --text-light: rgba(255, 255, 255, 1);  /* Full white text for better contrast */
+  --text-muted: rgba(255, 255, 255, 0.8); /* More visible muted text */
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --glass-bg: rgba(16, 28, 48, 0.85);
+  --glass-border: rgba(80, 128, 255, 0.3);
+  --window-radius: 12px;
+  
+  font-family: 'Segoe UI', 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html, body, #root {
@@ -29,5 +50,47 @@ html, body, #root {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #0a0a0a;
+  background-color: var(--darker-bg);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 140, 255, 0.6);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(126, 152, 255, 0.8);
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+}
+
+/* Modern animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 5px rgba(79, 116, 255, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(0, 208, 255, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(79, 116, 255, 0.5); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
 }
