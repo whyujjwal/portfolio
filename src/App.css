@@ -2,29 +2,106 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, 
+              box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 :root {
-  /* Updated color scheme with better contrast */
-  --primary-color: #5080ff;
-  --primary-dark: #3c68db;
-  --primary-light: #80a8ff;
-  --accent-color: #00d8ff;
-  --dark-bg: #0d1528;
-  --darker-bg: #081020;
-  --medium-bg: #192b4d;
-  --light-bg: #2a3c64;
-  --text-light: rgba(255, 255, 255, 1);  /* Full white text for better contrast */
-  --text-muted: rgba(255, 255, 255, 0.8); /* More visible muted text */
-  --shadow-color: rgba(0, 0, 0, 0.6);
-  --glass-bg: rgba(16, 28, 48, 0.85);
-  --glass-border: rgba(80, 128, 255, 0.3);
+  /* Paper Theme Color Palette */
+  --paper-white: #f8f5f0;
+  --paper-cream: #f2efe6;
+  --paper-tan: #e8e1d5;
+  --paper-light-sepia: #e6dfd0;
+  --paper-sepia: #d5c9b1;
+  --paper-gray: #b1aca1;
+  
+  /* Darker Paper Theme Colors */
+  --paper-dark: #cec1a7; /* Darker sepia tone */
+  --paper-darker: #bdb298; /* Even darker sepia */
+  --paper-darkest: #aca087; /* Deepest sepia tone */
+  
+  /* Background Colors - Additional Variables */
+  --desktop-bg-light: #c5baa1; /* Darker light sepia */
+  --desktop-bg-medium: #b5a98e; /* Medium dark sepia */
+  --desktop-bg-dark: #a59882; /* Dark sepia for background */
+  --icon-bg-light: #ffffff; /* Pure white for icon backgrounds */
+  --icon-bg-shadow: rgba(138, 125, 110, 0.4); /* Stronger shadows */
+  
+  /* Text Colors - Adjusted for darker background */
+  --ink-dark: #2d261f;
+  --ink-medium: #4a4239;
+  --ink-light: #7d7468;
+  --ink-faded: #a99e8f;
+  
+  /* Accent Colors */
+  --accent-blue: #5c7b9c;
+  --accent-green: #6a8d73;
+  --accent-red: #9c6b63;
+  --accent-yellow: #c4a76d;
+  
+  /* Shadow Colors */
+  --shadow-soft: rgba(158, 145, 130, 0.15);
+  --shadow-medium: rgba(158, 145, 130, 0.25);
+  --shadow-dark: rgba(158, 145, 130, 0.35);
+  
+  /* UI Element Colors */
+  --paper-bg: var(--paper-white);
+  --paper-surface: var(--paper-cream);
+  --paper-border: var(--paper-tan);
+  --text-primary: var(--ink-dark);
+  --text-secondary: var(--ink-medium);
+  --text-tertiary: var(--ink-light);
+  
+  /* Glass Effect Values */
+  --glass-bg: rgba(248, 245, 240, 0.85);
+  --glass-border: rgba(158, 145, 130, 0.2);
   --window-radius: 12px;
   
-  font-family: 'Segoe UI', 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  line-height: 1.5;
+  /* Typography */
+  --font-serif: 'EB Garamond', Georgia, serif;
+  --font-sans: 'Quattrocento Sans', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  
+  /* Typography Scale (Using Golden Ratio) */
+  --text-xs: 0.75rem;   /* 12px */
+  --text-sm: 0.875rem;  /* 14px */
+  --text-base: 1rem;    /* 16px */
+  --text-md: 1.125rem;  /* 18px */
+  --text-lg: 1.25rem;   /* 20px */
+  --text-xl: 1.5rem;    /* 24px */
+  --text-2xl: 1.875rem; /* 30px */
+  --text-3xl: 2.25rem;  /* 36px */
+  
+  /* Line heights */
+  --line-tight: 1.2;
+  --line-normal: 1.6;
+  --line-relaxed: 1.8;
+  
+  /* Space Scale */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.5rem;    /* 24px */
+  --space-6: 2rem;      /* 32px */
+  --space-8: 3rem;      /* 48px */
+  --space-10: 4rem;     /* 64px */
+  
+  /* Enhanced Shadow System */
+  --shadow-xs: 0 1px 2px rgba(20, 20, 20, 0.05);
+  --shadow-sm: 0 1px 3px rgba(20, 20, 20, 0.1);
+  --shadow-md: 0 4px 8px rgba(20, 20, 20, 0.12);
+  --shadow-lg: 0 8px 16px rgba(20, 20, 20, 0.15);
+  --shadow-xl: 0 12px 24px rgba(20, 20, 20, 0.2);
+  
+  /* Paper theme enhancements */
+  --paper-texture-light: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  --paper-texture-medium: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  
+  font-family: var(--font-serif);
+  line-height: 1.6;
   font-weight: 400;
-  color-scheme: dark;
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -35,6 +112,14 @@ html, body, #root {
   height: 100%;
   width: 100%;
   overflow: hidden;
+}
+
+body {
+  font-feature-settings: "kern", "liga", "calt", "pnum";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background-color: var(--paper-darkest);
 }
 
 #root {
@@ -50,47 +135,62 @@ html, body, #root {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--darker-bg);
+  background-color: var(--paper-bg);
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");
+  background-blend-mode: multiply;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 140, 255, 0.6);
-  border-radius: 5px;
+  background: var(--paper-gray);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(126, 152, 255, 0.8);
+  background: var(--ink-light);
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }
 
-/* Modern animations */
+/* Paper theme animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes scaleIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+@keyframes paperFold {
+  from { 
+    transform: perspective(1500px) rotateX(-8deg); 
+    opacity: 0;
+    transform-origin: top center;
+  }
+  to { 
+    transform: perspective(1500px) rotateX(0deg); 
+    opacity: 1;
+    transform-origin: top center;
+  }
 }
 
-@keyframes glowPulse {
-  0% { box-shadow: 0 0 5px rgba(79, 116, 255, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(0, 208, 255, 0.8); }
-  100% { box-shadow: 0 0 5px rgba(79, 116, 255, 0.5); }
+@keyframes pageCurl {
+  0% { transform: perspective(1000px) rotateY(0deg); }
+  100% { transform: perspective(1000px) rotateY(-6deg); }
 }
 
-@keyframes shimmer {
-  0% { background-position: -100% 0; }
-  100% { background-position: 200% 0; }
+@keyframes inkSpread {
+  0% { box-shadow: inset 0 0 0px rgba(60, 53, 48, 0.2); }
+  50% { box-shadow: inset 0 0 8px rgba(60, 53, 48, 0.3); }
+  100% { box-shadow: inset 0 0 0px rgba(60, 53, 48, 0.2); }
+}
+
+@keyframes subtleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }

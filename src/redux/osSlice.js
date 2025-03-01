@@ -6,34 +6,49 @@ const initialState = {
   wallpaper: 'default',
 };
 
+const generateWindowPosition = () => {
+  // Random offset to avoid windows stacking directly on top of each other
+  const randomX = Math.floor(Math.random() * 200); 
+  const randomY = Math.floor(Math.random() * 100);
+  return { x: 100 + randomX, y: 50 + randomY };
+};
+
 const osSlice = createSlice({
   name: 'os',
   initialState,
   reducers: {
     openApp: (state, action) => {
       const appId = action.payload;
-      // Check if app is already open
-      const existingAppIndex = state.openApps.findIndex(app => app.id === appId);
       
-      if (existingAppIndex !== -1) {
-        // Set this app as active and all others as inactive
-        state.openApps = state.openApps.map(app => ({
-          ...app,
-          isActive: app.id === appId
-        }));
-      } else {
-        // Create new app window and set as active
-        const newApp = {
+      // Check if the app is already open
+      const appIndex = state.openApps.findIndex(app => app.id === appId);
+      
+      if (appIndex === -1) {
+        // App is not open, add it with random position
+        state.openApps.push({
           id: appId,
           isActive: true,
-          position: { x: 50 + (state.openApps.length * 30), y: 50 + (state.openApps.length * 30) }
-        };
+          isMinimized: false,
+          position: generateWindowPosition()
+        });
         
-        // Set all apps as inactive except the new one
-        state.openApps = [
-          ...state.openApps.map(app => ({ ...app, isActive: false })),
-          newApp
-        ];
+        // Set all other apps as inactive
+        state.openApps.forEach(app => {
+          if (app.id !== appId) {
+            app.isActive = false;
+          }
+        });
+      } else {
+        // App is already open, set it as active and not minimized
+        state.openApps[appIndex].isActive = true;
+        state.openApps[appIndex].isMinimized = false;
+        
+        // Set all other apps as inactive
+        state.openApps.forEach((app, index) => {
+          if (index !== appIndex) {
+            app.isActive = false;
+          }
+        });
       }
     },
     closeApp: (state, action) => {
