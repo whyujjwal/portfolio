@@ -18,17 +18,12 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   const [isMaximized, setIsMaximized] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-
-  // Log to help debug
-  useEffect(() => {
-    console.log(`Window ${id} mounted with position:`, position);
-    
-    // Add window dimension debug info
-    if (windowRef.current) {
-      const rect = windowRef.current.getBoundingClientRect();
-      console.log(`Window ${id} dimensions:`, rect);
-    }
-  }, []);
+  
+  // Size state for resizing
+  const [size, setSize] = useState({ width: 600, height: 400 });
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeDirection, setResizeDirection] = useState(null);
+  const [resizeStartData, setResizeStartData] = useState(null);
 
   // Window control functions
   const handleMaximize = (e) => {
@@ -78,36 +73,121 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
     setIsDragging(false);
   };
 
-  // Set up event listeners for manual dragging
+  // Resize functionality
+  const startResize = (e, direction) => {
+    if (isMaximized) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsResizing(true);
+    setResizeDirection(direction);
+    
+    const rect = windowRef.current.getBoundingClientRect();
+    setResizeStartData({
+      startX: e.clientX,
+      startY: e.clientY,
+      startWidth: rect.width,
+      startHeight: rect.height,
+      startLeft: rect.left,
+      startTop: rect.top
+    });
+    
+    // Activate window when starting to resize
+    if (onActivate) onActivate();
+  };
+
+  const handleResize = (e) => {
+    if (!isResizing || isMaximized) return;
+    
+    const { startX, startY, startWidth, startHeight, startLeft, startTop } = resizeStartData;
+    const direction = resizeDirection;
+    
+    // Calculate new dimensions
+    let newWidth = startWidth;
+    let newHeight = startHeight;
+    let newX = position.x;
+    let newY = position.y;
+    
+    if (direction.includes('e')) {
+      newWidth = Math.max(300, startWidth + (e.clientX - startX));
+    }
+    if (direction.includes('s')) {
+      newHeight = Math.max(200, startHeight + (e.clientY - startY));
+    }
+    if (direction.includes('w')) {
+      const widthChange = startX - e.clientX;
+      newWidth = Math.max(300, startWidth + widthChange);
+      newX = Math.min(position.x - widthChange, position.x + startWidth - 300);
+    }
+    if (direction.includes('n')) {
+      const heightChange = startY - e.clientY;
+      newHeight = Math.max(200, startHeight + heightChange);
+      newY = Math.min(position.y - heightChange, position.y + startHeight - 200);
+    }
+    
+    // Update state
+    setSize({ width: newWidth, height: newHeight });
+    if (direction.includes('w') || direction.includes('n')) {
+      setPosition({ x: newX, y: newY });
+    }
+  };
+
+  const stopResize = () => {
+    setIsResizing(false);
+    setResizeDirection(null);
+    setResizeStartData(null);
+  };
+
+  // Set up event listeners for dragging and resizing
   useEffect(() => {
-    if (!titlebarRef.current) return;
-    
-    const titlebar = titlebarRef.current;
-    titlebar.addEventListener('mousedown', startDrag);
-    document.addEventListener('mousemove', handleDrag);
-    document.addEventListener('mouseup', stopDrag);
-    
-    // Cleanup event listeners
-    return () => {
-      titlebar.removeEventListener('mousedown', startDrag);
-      document.removeEventListener('mousemove', handleDrag);
-      document.removeEventListener('mouseup', stopDrag);
+    const handleMouseMove = (e) => {
+      if (isDragging) {
+        handleDrag(e);
+      }
+      if (isResizing) {
+        handleResize(e);
+      }
     };
-  }, [isDragging, dragOffset, isMaximized]);
+    
+    const handleMouseUp = () => {
+      stopDrag();
+      stopResize();
+    };
+    
+    if (isDragging || isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+    
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, isResizing, dragOffset, resizeDirection, resizeStartData]);
   
-  // Handle window click to activate
+  useEffect(() => {
+    if (titlebarRef.current) {
+      titlebarRef.current.addEventListener('mousedown', startDrag);
+      return () => {
+        titlebarRef.current?.removeEventListener('mousedown', startDrag);
+      };
+    }
+  }, []);
+  
+  // Handle window activation on click
   const handleWindowClick = () => {
     if (onActivate) onActivate();
   };
   
   if (isMinimized) return null;
   
-  // Position styles for the window
-  const windowStyles = isMaximized 
-    ? { width: '100%', height: 'calc(100vh - 48px)', top: 0, left: 0 }
+  // Window style with position and size
+  const windowStyle = isMaximized 
+    ? { width: '100%', height: 'calc(100vh - 52px)', top: 0, left: 0 }
     : { 
-        width: '600px', 
-        height: '400px', 
+        width: `${size.width}px`, 
+        height: `${size.height}px`, 
         top: `${position.y}px`, 
         left: `${position.x}px` 
       };
@@ -116,7 +196,7 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
     <div 
       ref={windowRef}
       className={`window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''}`}
-      style={windowStyles}
+      style={windowStyle}
       onClick={handleWindowClick}
     >
       <div ref={titlebarRef} className="window-titlebar">
@@ -137,6 +217,20 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
       <div className="window-content">
         {children}
       </div>
+      
+      {/* Resize handles */}
+      {!isMaximized && (
+        <>
+          <div className="resize-handle n" onMouseDown={(e) => startResize(e, 'n')}></div>
+          <div className="resize-handle e" onMouseDown={(e) => startResize(e, 'e')}></div>
+          <div className="resize-handle s" onMouseDown={(e) => startResize(e, 's')}></div>
+          <div className="resize-handle w" onMouseDown={(e) => startResize(e, 'w')}></div>
+          <div className="resize-handle ne" onMouseDown={(e) => startResize(e, 'ne')}></div>
+          <div className="resize-handle se" onMouseDown={(e) => startResize(e, 'se')}></div>
+          <div className="resize-handle sw" onMouseDown={(e) => startResize(e, 'sw')}></div>
+          <div className="resize-handle nw" onMouseDown={(e) => startResize(e, 'nw')}></div>
+        </>
+      )}
     </div>
   );
 };

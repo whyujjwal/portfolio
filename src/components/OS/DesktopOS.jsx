@@ -18,19 +18,7 @@ const DesktopOS = () => {
   const openApps = useSelector(state => state.os.openApps);
   const dispatch = useDispatch();
 
-  // Track mouse position for parallax effect
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-
-  // Generate background elements
+  // Initialize background elements and track mouse for parallax
   useEffect(() => {
     // Generate stars (subtle speckles)
     const generateStars = () => {
@@ -73,14 +61,33 @@ const DesktopOS = () => {
     }, 800);
     
     return () => clearTimeout(timer);
+
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
+  // Function to toggle the launcher
   const toggleLauncher = () => {
     setLauncherOpen(prevState => !prevState);
   };
 
+  // Function to explicitly close the launcher
+  const closeLauncher = () => {
+    if (launcherOpen) {
+      setLauncherOpen(false);
+    }
+  };
+
+  // Handle opening apps
   const handleOpenApp = (appId) => {
     dispatch(openApp(appId));
+    // Close the launcher when an app is opened
     setLauncherOpen(false);
   };
 
@@ -101,9 +108,9 @@ const DesktopOS = () => {
 
   return (
     <div className={`desktop-os ${loaded ? 'loaded' : ''}`}>
-      {/* Animated background with parallax effects */}
+      {/* Background elements with parallax */}
       <div className="os-background" style={getParallaxStyle(0.5)}>
-        {/* Star field effect */}
+        {/* Stars and paper bits */}
         {stars.map(star => (
           <div
             key={star.id}
@@ -119,40 +126,22 @@ const DesktopOS = () => {
         ))}
       </div>
       
-      {/* Interactive floating paper bits */}
-      <div className="paper-bits-container">
-        {paperBits.map(bit => (
-          <div
-            key={bit.id}
-            className="paper-bit"
-            style={{
-              left: bit.left,
-              top: bit.top,
-              width: bit.size,
-              height: bit.size,
-              transform: `rotate(${bit.rotation}deg)`,
-              animationDuration: bit.animationDuration,
-              animationDelay: bit.delay
-            }}
-          />
-        ))}
-      </div>
-      
-      {/* Floating particles with parallax */}
-      <div className="floating-particles" style={getParallaxStyle(1.2)}>
-        <div className="particle particle-1"></div>
-        <div className="particle particle-2"></div>
-        <div className="particle particle-3"></div>
-        <div className="particle particle-4"></div>
-      </div>
-      
+      {/* Desktop content area */}
       <div className="os-content">
-        <Desktop onAppClick={handleOpenApp} />
+        <Desktop 
+          onAppClick={handleOpenApp} 
+          closeLauncher={closeLauncher} 
+        />
         <ErrorBoundary>
           <WindowManager openApps={openApps} />
         </ErrorBoundary>
-        {launcherOpen && <AppLauncher onAppClick={handleOpenApp} />}
+        {launcherOpen && (
+          <div className="launcher-container" onClick={(e) => e.stopPropagation()}>
+            <AppLauncher onAppClick={handleOpenApp} />
+          </div>
+        )}
       </div>
+      
       <Taskbar 
         openApps={openApps} 
         toggleLauncher={toggleLauncher}
