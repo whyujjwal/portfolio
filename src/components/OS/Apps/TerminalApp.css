@@ -1,0 +1,46 @@
+.terminal-app {
+  background-color: #1e1e1e;
+  color: #dcdcdc;
+  font-family: 'Consolas', 'Monaco', monospace;
+  line-height: 1.4;
+}
+
+.terminal-container {
+  padding: 10px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.terminal-line {
+  margin-bottom: 5px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-line.command {
+  color: #88ff88;
+}
+
+.terminal-line.output {
+  color: #dcdcdc;
+}
+
+.terminal-input-line {
+  display: flex;
+  margin-top: 10px;
+}
+
+.prompt {
+  color: #88ff88;
+  margin-right: 5px;
+}
+
+.terminal-input-line input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #dcdcdc;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}

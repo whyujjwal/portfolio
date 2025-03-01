@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <!-- Radial gradient background representing digital space -->
+  <defs>
+    <radialGradient id="cyberSpace" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#0a192f" />
+      <stop offset="50%" stop-color="#172a45" />
+      <stop offset="100%" stop-color="#020c1b" />
+    </radialGradient>
+    
+    <!-- Code pattern -->
+    <pattern id="codePattern" x="0" y="0" width="300" height="300" patternUnits="userSpaceOnUse">
+      <text x="10" y="20" font-family="monospace" font-size="10" fill="#64ffda" fill-opacity="0.3">function init() { return new Promise((resolve) => {</text>
+      <text x="10" y="40" font-family="monospace" font-size="10" fill="#8892b0" fill-opacity="0.3">  const data = fetchAPI('/endpoint');</text>
+      <text x="10" y="60" font-family="monospace" font-size="10" fill="#a8b2d1" fill-opacity="0.3">  if (!data) throw new Error('Failed to initialize');</text>
+      <text x="10" y="80" font-family="monospace" font-size="10" fill="#8892b0" fill-opacity="0.3">  const config = JSON.parse(data.config);</text>
+      <text x="10" y="100" font-family="monospace" font-size="10" fill="#64ffda" fill-opacity="0.3">  resolve(config.systems.map(sys => sys.init()));</text>
+      <text x="10" y="120" font-family="monospace" font-size="10" fill="#8892b0" fill-opacity="0.3">});</text>
+      <text x="10" y="160" font-family="monospace" font-size="10" fill="#ff79c6" fill-opacity="0.3">async function loadModules(ctx) {</text>
+      <text x="10" y="180" font-family="monospace" font-size="10" fill="#f8f8f2" fill-opacity="0.3">  const modules = await Promise.all(</text>
+      <text x="10" y="200" font-family="monospace" font-size="10" fill="#8be9fd" fill-opacity="0.3">    ctx.dependencies.map(dep => import(`./modules/${dep}`)</text>
+      <text x="10" y="220" font-family="monospace" font-size="10" fill="#f8f8f2" fill-opacity="0.3">  );</text>
+      <text x="10" y="240" font-family="monospace" font-size="10" fill="#50fa7b" fill-opacity="0.3">  return modules.reduce((acc, mod) => {</text>
+      <text x="10" y="260" font-family="monospace" font-size="10" fill="#f1fa8c" fill-opacity="0.3">    return {...acc, [mod.name]: mod.methods};</text>
+      <text x="10" y="280" font-family="monospace" font-size="10" fill="#f8f8f2" fill-opacity="0.3">  }, {});</text>
+      <text x="10" y="300" font-family="monospace" font-size="10" fill="#ff79c6" fill-opacity="0.3">}</text>
+    </pattern>
+    
+    <!-- Circuit board pattern -->
+    <pattern id="circuitPattern" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M 30 10 L 70 10 M 30 30 L 70 30 M 30 50 L 70 50 M 30 70 L 70 70 M 30 90 L 70 90" stroke="#64ffda" stroke-width="0.5" fill="none" stroke-opacity="0.4"/>
+      <path d="M 10 30 L 10 70 M 30 30 L 30 70 M 50 30 L 50 70 M 70 30 L 70 70 M 90 30 L 90 70" stroke="#64ffda" stroke-width="0.5" fill="none" stroke-opacity="0.4"/>
+      <circle cx="10" cy="10" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+      <circle cx="50" cy="10" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+      <circle cx="90" cy="10" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+      <circle cx="10" cy="50" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+      <circle cx="50" cy="50" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+      <circle cx="90" cy="50" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+      <circle cx="10" cy="90" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+      <circle cx="50" cy="90" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+      <circle cx="90" cy="90" r="2" fill="#ff79c6" fill-opacity="0.6"/>
+    </pattern>
+
+    <!-- Gradient for the orb -->
+    <radialGradient id="orbGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#50fa7b" stop-opacity="0.8"/>
+      <stop offset="70%" stop-color="#8be9fd" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#bd93f9" stop-opacity="0.2"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Main background -->
+  <rect width="1920" height="1080" fill="url(#cyberSpace)"/>
+  
+  <!-- Code layer -->
+  <rect width="1920" height="1080" fill="url(#codePattern)" fill-opacity="0.4"/>
+  
+  <!-- Digital Neural Network -->
+  <g id="neuralNetwork">
+    <!-- Connection lines -->
+    <path d="M 500,300 C 700,100 900,500 1100,200" stroke="#8be9fd" stroke-width="1.5" fill="none" stroke-opacity="0.6"/>
+    <path d="M 350,500 C 600,300 800,700 1200,400" stroke="#ff79c6" stroke-width="1.5" fill="none" stroke-opacity="0.6"/>
+    <path d="M 450,700 C 700,600 1000,800 1300,550" stroke="#50fa7b" stroke-width="1.5" fill="none" stroke-opacity="0.6"/>
+    <path d="M 300,200 C 500,400 1000,300 1400,600" stroke="#f1fa8c" stroke-width="1.5" fill="none" stroke-opacity="0.6"/>
+    <path d="M 400,800 C 750,500 1100,900 1500,300" stroke="#bd93f9" stroke-width="1.5" fill="none" stroke-opacity="0.6"/>
+    
+    <!-- Cross connections -->
+    <path d="M 500,300 C 600,500 400,600 350,500" stroke="#8be9fd" stroke-width="1" fill="none" stroke-opacity="0.4"/>
+    <path d="M 1100,200 C 1000,300 1300,400 1200,400" stroke="#ff79c6" stroke-width="1" fill="none" stroke-opacity="0.4"/>
+    <path d="M 450,700 C 380,600 300,450 300,200" stroke="#50fa7b" stroke-width="1" fill="none" stroke-opacity="0.4"/>
+    <path d="M 1300,550 C 1200,500 1500,400 1400,600" stroke="#f1fa8c" stroke-width="1" fill="none" stroke-opacity="0.4"/>
+    <path d="M 400,800 C 500,750 420,650 450,700" stroke="#bd93f9" stroke-width="1" fill="none" stroke-opacity="0.4"/>
+    
+    <!-- Nodes -->
+    <circle cx="500" cy="300" r="8" fill="#8be9fd"/>
+    <circle cx="1100" cy="200" r="8" fill="#8be9fd"/>
+    <circle cx="350" cy="500" r="8" fill="#ff79c6"/>
+    <circle cx="1200" cy="400" r="8" fill="#ff79c6"/>
+    <circle cx="450" cy="700" r="8" fill="#50fa7b"/>
+    <circle cx="1300" cy="550" r="8" fill="#50fa7b"/>
+    <circle cx="300" cy="200" r="8" fill="#f1fa8c"/>
+    <circle cx="1400" cy="600" r="8" fill="#f1fa8c"/>
+    <circle cx="400" cy="800" r="8" fill="#bd93f9"/>
+    <circle cx="1500" cy="300" r="8" fill="#bd93f9"/>
+    
+    <!-- Data flow particles -->
+    <circle cx="650" cy="200" r="3" fill="#ffffff">
+      <animate attributeName="cx" from="500" to="1100" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="cy" from="300" to="200" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="800" cy="450" r="3" fill="#ffffff">
+      <animate attributeName="cx" from="350" to="1200" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="cy" from="500" to="400" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="650" cy="650" r="3" fill="#ffffff">
+      <animate attributeName="cx" from="450" to="1300" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="cy" from="700" to="550" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="850" cy="400" r="3" fill="#ffffff">
+      <animate attributeName="cx" from="300" to="1400" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="cy" from="200" to="600" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="950" cy="550" r="3" fill="#ffffff">
+      <animate attributeName="cx" from="400" to="1500" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="cy" from="800" to="300" dur="8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Central Tech Hub -->
+  <g id="techHub">
+    <!-- Central processing orb -->
+    <circle cx="960" cy="540" r="120" fill="url(#orbGradient)">
+      <animate attributeName="r" values="120;130;120" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Hexagonal frame -->
+    <path d="M 960,400 L 1064,470 L 1064,610 L 960,680 L 856,610 L 856,470 Z" fill="none" stroke="#bd93f9" stroke-width="3" stroke-opacity="0.8"/>
+    
+    <!-- Inner hexagon -->
+    <path d="M 960,440 L 1034,490 L 1034,590 L 960,640 L 886,590 L 886,490 Z" fill="none" stroke="#ff79c6" stroke-width="2" stroke-dasharray="10,5" stroke-opacity="0.6">
+      <animateTransform attributeName="transform" type="rotate" from="0 960 540" to="360 960 540" dur="120s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Circuitry connections -->
+    <line x1="960" y1="400" x2="960" y2="200" stroke="#50fa7b" stroke-width="2" stroke-opacity="0.7"/>
+    <line x1="1064" y1="470" x2="1300" y2="350" stroke="#ff79c6" stroke-width="2" stroke-opacity="0.7"/>
+    <line x1="1064" y1="610" x2="1350" y2="750" stroke="#8be9fd" stroke-width="2" stroke-opacity="0.7"/>
+    <line x1="960" y1="680" x2="960" y2="900" stroke="#f1fa8c" stroke-width="2" stroke-opacity="0.7"/>
+    <line x1="856" y1="610" x2="600" y2="750" stroke="#bd93f9" stroke-width="2" stroke-opacity="0.7"/>
+    <line x1="856" y1="470" x2="600" y2="350" stroke="#ff5555" stroke-width="2" stroke-opacity="0.7"/>
+    
+    <!-- Data connectors -->
+    <circle cx="960" cy="200" r="12" fill="#50fa7b" fill-opacity="0.8"/>
+    <circle cx="1300" cy="350" r="12" fill="#ff79c6" fill-opacity="0.8"/>
+    <circle cx="1350" cy="750" r="12" fill="#8be9fd" fill-opacity="0.8"/>
+    <circle cx="960" cy="900" r="12" fill="#f1fa8c" fill-opacity="0.8"/>
+    <circle cx="600" cy="750" r="12" fill="#bd93f9" fill-opacity="0.8"/>
+    <circle cx="600" cy="350" r="12" fill="#ff5555" fill-opacity="0.8"/>
+  </g>
+  
+  <!-- Dev references -->
+  <g id="techReferences">
+    <!-- Git branch structure -->
+    <g transform="translate(100, 150)">
+      <path d="M 0,0 L 0,200 M 0,50 L 100,50 L 100,150 M 100,100 L 200,100" stroke="#f1fa8c" stroke-width="3" fill="none"/>
+      <circle cx="0" cy="0" r="8" fill="#f1fa8c"/>
+      <circle cx="0" cy="50" r="8" fill="#f1fa8c"/>
+      <circle cx="0" cy="200" r="8" fill="#f1fa8c"/>
+      <circle cx="100" cy="50" r="8" fill="#f1fa8c"/>
+      <circle cx="100" cy="100" r="8" fill="#f1fa8c"/>
+      <circle cx="100" cy="150" r="8" fill="#f1fa8c"/>
+      <circle cx="200" cy="100" r="8" fill="#f1fa8c"/>
+      <text x="10" y="20" font-family="monospace" font-size="12" fill="#f8f8f2">master</text>
+      <text x="110" y="70" font-family="monospace" font-size="12" fill="#f8f

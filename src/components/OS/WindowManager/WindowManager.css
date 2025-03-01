@@ -1,0 +1,12 @@
+.window-manager {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 40px);
+  pointer-events: none;
+}
+
+.window-manager .window {
+  pointer-events: auto;
+}
