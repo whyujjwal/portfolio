@@ -1,18 +1,22 @@
+/* Fix desktop area styles */
 .desktop-area {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-}
-
-.desktop {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 1;
+  padding: 0 !important; /* Override paper-container padding */
+}
+
+.desktop {
+  position: relative;
   width: 100%;
   height: 100%;
+  display: block !important; /* Override grid display for absolute positioning */
+  box-sizing: border-box;
   padding: 20px;
-  display: block; /* Changed from flex to allow absolute positioning of icons */
   user-select: none; /* Prevent text selection during drag */
 }
 
@@ -27,24 +31,106 @@
   z-index: -1;
 }
 
-/* Updated desktop icon CSS to support dragging */
-.desktop .desktop-icon {
-  transition: none; /* Disable transitions for smooth dragging */
+/* Fix icon appearance and positioning */
+/* Paper UI styled desktop icon */
+.desktop-icon {
+  position: absolute;
+  width: 80px;
+  height: auto;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  transition: transform 0.2s ease;
+  border: none;
+  z-index: 5;
+  animation: fadeIn 0.4s ease-out forwards;
+  opacity: 0;
 }
 
-/* Only apply hover animation when not being dragged */
-.desktop .desktop-icon:not(.dragging):hover {
-  transform: translateY(-5px);
+.desktop-icon:hover {
+  transform: translateY(-3px);
+  background-color: transparent !important; /* Keep transparent on hover */
+  box-shadow: none !important; /* Remove shadow */
 }
 
-.desktop .desktop-icon.dragging {
+/* Dark theme adjustments */
+.desktop-os.dark .desktop-icon {
+  background-color: rgba(40, 40, 45, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.desktop-os.dark .desktop-icon:hover {
+  background-color: rgba(50, 50, 55, 0.75) !important;
+}
+
+/* Enhance icon container */
+/* Paper UI styled icon container */
+.icon-container {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #f6f6f6 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08),  inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  margin: 0 auto; /* Center icon */
+}
+
+.desktop-os.dark .icon-container {
+  background: linear-gradient(135deg, #404040 0%, #333333 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.icon-container svg {
+  position: relative;
+  z-index: 2;
+  font-size: 24px;
+  /* Restore original icon color */
+  color: #3a10e5;
+}
+
+.desktop-os.dark .icon-container svg {
+  color: #6400e4;
+}
+
+.icon-container.hovered {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Remove any styles related to icon-label */
+
+/* Add animation for appearing icons */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dragging styles */
+.desktop-icon.dragging {
   opacity: 0.8;
-  cursor: grabbing;
+  cursor: grabbing !important;
+  z-index: 100;
 }
 
-.desktop-icons {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 80px);
-  grid-gap: 20px;
-  padding: 20px;
+.desktop-icon.dragging .icon-container {
+  transform: scale(1.05);
+}
+
+/* Animation for collision feedback */
+@keyframes collision-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.desktop-icon.collision-animation {
+  animation: collision-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }

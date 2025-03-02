@@ -1,16 +1,15 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import { useSelector } from 'react-redux';
 import DesktopOS from './components/OS/DesktopOS';
 import './App.css';
 
 function App() {
+  const theme = useSelector(state => state.os.theme);
+  
   return (
-    <Provider store={store}>
-      <div className="app-container">
-        <DesktopOS />
-      </div>
-    </Provider>
+    <div className={`app ${theme}`}>
+      <DesktopOS />
+    </div>
   );
 }
 

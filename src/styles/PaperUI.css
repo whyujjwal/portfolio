@@ -1,0 +1,560 @@
+/* Codecademy-Inspired Paper UI Design System */
+
+/* CSS Variables */
+:root {
+  /* Color System */
+  --primary-blue: #10162f;
+  --primary-blue-light: #3a10e5;
+  --primary-blue-hover: #6400e4;
+  --secondary-purple: #6400e4;
+  --accent-green: #58cb8e;
+  --accent-pink: #e51691;
+  
+  /* Neutral Colors */
+  --neutral-100: #ffffff;
+  --neutral-200: #f9f9f9;
+  --neutral-300: #f3f3f3;
+  --neutral-400: #ebebeb;
+  --neutral-500: #d9d9d9;
+  --neutral-600: #acacac;
+  --neutral-700: #6e6e6e;
+  --neutral-800: #3a3a3a;
+  --neutral-900: #1a1a1a;
+  
+  /* Typography */
+  --font-primary: 'Apercu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-code: 'Source Code Pro', Consolas, Monaco, 'Andale Mono', monospace;
+  
+  /* Font Sizes */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.75rem;   /* 28px */
+  --text-4xl: 2rem;      /* 32px */
+  
+  /* Line Heights */
+  --line-tight: 1.25;
+  --line-normal: 1.5;
+  --line-relaxed: 1.75;
+  
+  /* Spacing */
+  --space-1: 0.25rem;    /* 4px */
+  --space-2: 0.5rem;     /* 8px */
+  --space-3: 0.75rem;    /* 12px */
+  --space-4: 1rem;       /* 16px */
+  --space-5: 1.5rem;     /* 24px */
+  --space-6: 2rem;       /* 32px */
+  --space-8: 3rem;       /* 48px */
+  --space-10: 4rem;      /* 64px */
+  
+  /* Borders */
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 12px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+}
+
+/* Base Resets */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--neutral-300);
+  color: var(--neutral-900);
+  line-height: var(--line-normal);
+  font-size: var(--text-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout Components */
+.paper-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.paper-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-5);
+}
+
+/* Paper Card Components */
+.paper-card {
+  background-color: var(--neutral-100);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform var(--transition-normal), 
+              box-shadow var(--transition-normal);
+}
+
+.paper-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.paper-card-header {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--neutral-300);
+}
+
+.paper-card-content {
+  padding: var(--space-5);
+}
+
+.paper-card-footer {
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--neutral-300);
+  background-color: var(--neutral-200);
+}
+
+/* Navigation */
+.paper-nav {
+  background-color: var(--neutral-100);
+  box-shadow: var(--shadow-sm);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-5);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.paper-nav-logo {
+  font-weight: 700;
+  font-size: var(--text-xl);
+  color: var(--primary-blue);
+}
+
+.paper-nav-items {
+  display: flex;
+  margin-left: auto;
+  gap: var(--space-5);
+}
+
+.paper-nav-item {
+  color: var(--neutral-800);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.paper-nav-item:hover {
+  color: var(--primary-blue-light);
+}
+
+.paper-nav-item.active {
+  color: var(--primary-blue-light);
+}
+
+/* Sidebar */
+.paper-sidebar {
+  background-color: var(--neutral-100);
+  box-shadow: var(--shadow-md);
+  width: 240px;
+  height: calc(100vh - 64px);
+  position: fixed;
+  top: 64px;
+  left: 0;
+  overflow-y: auto;
+  padding: var(--space-4) 0;
+  z-index: 50;
+}
+
+.paper-sidebar-item {
+  padding: var(--space-3) var(--space-5);
+  display: block;
+  color: var(--neutral-800);
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color var(--transition-fast);
+  border-left: 3px solid transparent;
+}
+
+.paper-sidebar-item:hover {
+  background-color: var(--neutral-200);
+}
+
+.paper-sidebar-item.active {
+  background-color: var(--neutral-200);
+  border-left-color: var(--primary-blue-light);
+  color: var(--primary-blue-light);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-blue);
+  margin-bottom: var(--space-4);
+  line-height: var(--line-tight);
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+}
+
+h4 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+}
+
+p {
+  margin-bottom: var(--space-4);
+  color: var(--neutral-800);
+}
+
+/* Code Blocks */
+.code-block {
+  background-color: var(--neutral-900);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  overflow-x: auto;
+}
+
+.code-block code {
+  font-family: var(--font-code);
+  font-size: var(--text-sm);
+  color: var(--neutral-100);
+  line-height: 1.6;
+}
+
+/* Inline Code */
+code {
+  font-family: var(--font-code);
+  background-color: var(--neutral-300);
+  padding: 0.2em 0.4em;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.9em;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-5);
+  font-weight: 600;
+  border-radius: var(--border-radius-md);
+  transition: all var(--transition-normal);
+  border: none;
+  cursor: pointer;
+  font-size: var(--text-base);
+}
+
+.btn-primary {
+  background-color: var(--primary-blue-light);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-blue-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--neutral-200);
+  color: var(--neutral-900);
+}
+
+.btn-secondary:hover {
+  background-color: var(--neutral-300);
+  transform: translateY(-1px);
+}
+
+/* Progress Indicators */
+.progress-container {
+  background-color: var(--neutral-300);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: var(--space-4) 0;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--primary-blue-light);
+  border-radius: 4px;
+  transition: width var(--transition-normal);
+}
+
+/* Cards for course listings */
+.course-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: var(--neutral-100);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-normal), 
+              box-shadow var(--transition-normal);
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.course-card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.course-card-content {
+  padding: var(--space-4);
+}
+
+.course-card-title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.course-card-description {
+  color: var(--neutral-700);
+  margin-bottom: var(--space-3);
+  line-height: var(--line-relaxed);
+}
+
+.course-card-meta {
+  display: flex;
+  align-items: center;
+  color: var(--neutral-600);
+  font-size: var(--text-sm);
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .paper-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  
+  .paper-sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+  }
+}
+
+/* Add these styles to the end of the file */
+
+/* Paper Layout Component */
+.paper-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--neutral-300);
+}
+
+.paper-layout-content {
+  display: flex;
+  flex: 1;
+}
+
+.paper-layout-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.paper-layout-main {
+  flex: 1;
+  padding: var(--space-5) 0;
+}
+
+.paper-layout-main.with-sidebar {
+  margin-left: 240px;
+}
+
+@media (max-width: 768px) {
+  .paper-layout-sidebar {
+    width: 100%;
+    position: static;
+  }
+  
+  .paper-layout-main.with-sidebar {
+    margin-left: 0;
+  }
+}
+
+/* Enhanced Progress Bar Component */
+.progress-component {
+  margin: var(--space-4) 0;
+  width: 100%;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--neutral-700);
+}
+
+.progress-container {
+  background-color: var(--neutral-300);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  background-color: var(--primary-blue-light);
+  border-radius: 4px;
+  position: relative;
+}
+
+/* Striped effect */
+.progress-bar-striped {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+
+/* Animation for striped progress bar */
+.progress-bar-animated {
+  animation: progress-bar-stripes 1s linear infinite;
+}
+
+@keyframes progress-bar-stripes {
+  0% {
+    background-position: 1rem 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Enhanced Course Card */
+.course-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.course-tag {
+  padding: 2px 8px;
+  background-color: var(--neutral-200);
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  color: var(--neutral-700);
+  font-weight: 500;
+}
+
+/* Paper UI Template Components */
+.paper-template {
+  margin-bottom: var(--space-6);
+}
+
+.paper-template-header {
+  margin-bottom: var(--space-5);
+}
+
+.paper-template-title {
+  font-size: var(--text-3xl);
+  color: var(--primary-blue);
+  margin-bottom: var(--space-2);
+  font-weight: 700;
+}
+
+.paper-template-subtitle {
+  font-size: var(--text-lg);
+  color: var(--neutral-700);
+  margin-bottom: var(--space-4);
+}
+
+.paper-template-actions {
+  margin-top: var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Paper Table Component */
+.paper-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-5);
+}
+
+.paper-table thead {
+  background-color: var(--neutral-100);
+}
+
+.paper-table th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-weight: 600;
+  color: var(--primary-blue);
+  border-bottom: 1px solid var(--neutral-300);
+  font-size: var(--text-sm);
+}
+
+.paper-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--neutral-300);
+  font-size: var(--text-sm);
+  color: var(--neutral-800);
+}
+
+.paper-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.paper-table tbody tr:hover {
+  background-color: var(--neutral-200);
+}
+
+@media (max-width: 480px) {
+  .paper-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .paper-nav {
+    padding: 0 var(--space-3);
+  }
+}

@@ -1,63 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faCog, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch } from 'react-redux';
-import { setActiveApp, restoreApp } from '../../../redux/osSlice';
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import { faWindows } from '@fortawesome/free-brands-svg-icons'; // Fix: Import faWindows from brands package
+import Clock from './Clock';
+import TaskbarItem from './TaskbarItem';
 import './Taskbar.css';
+import '../../../styles/PaperUI.css';
 
-const Taskbar = ({ openApps, toggleLauncher, launcherOpen }) => {
-  const [time, setTime] = useState(getCurrentTime());
-  const dispatch = useDispatch();
-  
-  function getCurrentTime() {
-    const now = new Date();
-    return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-  
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(getCurrentTime());
-    }, 1000);
-    
-    return () => clearInterval(timer);
-  }, []);
-
-  const handleAppClick = (appId) => {
-    const app = openApps.find(app => app.id === appId);
-    
-    if (app && app.isMinimized) {
-      // Restore minimized app
-      dispatch(restoreApp(appId));
-    } else {
-      // Just set as active
-      dispatch(setActiveApp(appId));
-    }
-  };
-  
+const Taskbar = ({ 
+  openApps, 
+  toggleLauncher, 
+  launcherOpen, 
+  toggleTheme, 
+  theme 
+}) => {
   return (
     <div className="taskbar">
-      <div className="taskbar-left">
-        <button className={`launcher-button ${launcherOpen ? 'active' : ''}`} onClick={toggleLauncher}>
-          <FontAwesomeIcon icon={faHome} />
-        </button>
-        <div className="taskbar-apps">
-          {openApps.map(app => (
-            <button 
-              key={app.id}
-              className={`taskbar-app ${app.isActive ? 'active' : ''} ${app.isMinimized ? 'minimized' : ''}`}
-              onClick={() => handleAppClick(app.id)}
-            >
-              <FontAwesomeIcon icon={app.icon || faWindowMaximize} />
-              <span>{app.title || app.id.charAt(0).toUpperCase() + app.id.slice(1)}</span>
-            </button>
-          ))}
-        </div>
+      <button 
+        className={`taskbar-button start-button ${launcherOpen ? 'active' : ''}`} 
+        onClick={toggleLauncher}
+        title="Open App Launcher"
+      >
+        <FontAwesomeIcon icon={faWindows} />
+      </button>
+      
+      <div className="taskbar-items">
+        {openApps.map(app => (
+          <TaskbarItem 
+            key={app.id} 
+            app={app}
+            className="taskbar-button"
+          />
+        ))}
       </div>
+      
       <div className="taskbar-right">
-        <button className="taskbar-settings">
-          <FontAwesomeIcon icon={faCog} />
+        <button 
+          className="taskbar-button theme-toggle" 
+          onClick={toggleTheme}
+          title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+        >
+          <FontAwesomeIcon icon={theme === 'light' ? faMoon : faSun} />
         </button>
-        <div className="taskbar-time">{time}</div>
+        <Clock />
       </div>
     </div>
   );

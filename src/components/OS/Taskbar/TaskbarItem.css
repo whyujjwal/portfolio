@@ -1,0 +1,22 @@
+/* Active app indicator */
+.taskbar-item-indicator {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  border-radius: 1.5px;
+  background-color: var(--primary-blue-light);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.taskbar-button.active .taskbar-item-indicator {
+  opacity: 1;
+}
+
+/* Paper-like pressed state */
+.taskbar-button.active:active {
+  transform: translateY(0px);
+}

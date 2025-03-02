@@ -1,67 +1,52 @@
 /* Elegant window styling */
 .window {
   position: absolute;
-  background-color: var(--paper-white);
-  background-image: var(--paper-texture-light);
-  border: 1px solid var(--paper-border);
-  border-radius: var(--window-radius);
-  box-shadow: var(--shadow-xl), 0 35px 60px -15px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   z-index: 10;
-  transition: box-shadow 0.4s ease, transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-  animation: paperFold 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+  transition: box-shadow 0.3s ease;
+  animation: paperFold 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: center;
   touch-action: none;
 }
 
 .window.active {
-  box-shadow: var(--shadow-xl), 
-              0 35px 70px -15px rgba(0, 0, 0, 0.2),
-              0 0 15px rgba(230, 223, 208, 0.05);
-  border-color: var(--paper-gray);
   z-index: 100;
+  box-shadow: var(--shadow-xl), 
+              0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.desktop-os.dark .window.active {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .window.maximized {
+  border-radius: 0 !important;
   position: fixed !important;
   width: 100vw !important;
-  height: calc(100vh - 48px) !important;
+  height: calc(100vh - 54px) !important;
   top: 0 !important;
   left: 0 !important;
-  border-radius: 0;
-  border: none;
-  transition: none;
   animation: none;
 }
 
 /* Refined titlebar */
 .window-titlebar {
-  background: linear-gradient(90deg, var(--paper-cream) 0%, var(--paper-light-sepia) 100%);
-  height: 42px; /* Slightly taller for elegance */
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-4) !important;
   cursor: move;
   user-select: none;
-  border-bottom: 1px solid var(--paper-border);
   z-index: 2;
   touch-action: none;
 }
 
-.window.active .window-titlebar {
-  background: linear-gradient(90deg, 
-    rgba(230, 223, 208, 1) 0%, 
-    rgba(213, 201, 177, 1) 100%);
-  border-bottom: 1px solid rgba(158, 145, 130, 0.3);
-}
-
 .window-title {
-  font-family: var(--font-serif);
-  font-size: var(--text-md);
-  font-weight: 500;
-  color: var(--ink-dark);
+  font-weight: 600;
+  font-size: var(--text-base);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -73,61 +58,44 @@
 /* Elegant window controls */
 .window-controls {
   display: flex;
-  flex-shrink: 0;
-  z-index: 3;
   gap: var(--space-1);
-  cursor: default;
 }
 
 .window-btn {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border: none;
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--ink-medium);
-  cursor: pointer !important;
+  background: transparent;
+  color: var(--neutral-600);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
-  position: relative;
-  overflow: hidden;
+  transition: all 0.2s;
 }
 
-.window-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
-  opacity: 0;
-  transition: opacity 0.3s;
+.desktop-os.dark .window-btn {
+  color: var(--neutral-500);
 }
 
 .window-btn:hover {
   transform: scale(1.08);
 }
 
-.window-btn:hover::after {
-  opacity: 1;
-}
-
 .window-btn.minimize:hover {
   background-color: var(--accent-yellow);
-  color: #fff;
+  color: var(--neutral-100);
 }
 
 .window-btn.maximize:hover {
   background-color: var(--accent-green);
-  color: #fff;
+  color: var(--neutral-100);
 }
 
 .window-btn.close:hover {
-  background-color: var(--accent-red);
-  color: #fff;
+  background-color: var(--accent-pink);
+  color: var(--neutral-100);
 }
 
 /* Refined window content area */
@@ -148,82 +116,71 @@
 /* Resize handles - made subtle */
 .resize-handle {
   position: absolute;
-  z-index: 3;
-  background-color: transparent;
+  background: transparent;
 }
 
-.resize-handle:hover {
-  background-color: rgba(158, 145, 130, 0.1);
-}
-
-/* Edges - make them bigger for easier grabbing but subtle */
 .resize-handle.n {
-  top: -5px;
+  top: 0;
   left: 8px;
   right: 8px;
-  height: 10px;
-  cursor: n-resize;
+  height: 6px;
+  cursor: ns-resize;
 }
 
 .resize-handle.e {
   top: 8px;
-  right: -5px;
+  right: 0;
   bottom: 8px;
-  width: 10px;
-  cursor: e-resize;
+  width: 6px;
+  cursor: ew-resize;
 }
 
 .resize-handle.s {
-  bottom: -5px;
+  bottom: 0;
   left: 8px;
   right: 8px;
-  height: 10px;
-  cursor: s-resize;
+  height: 6px;
+  cursor: ns-resize;
 }
 
 .resize-handle.w {
   top: 8px;
-  left: -5px;
+  left: 0;
   bottom: 8px;
-  width: 10px;
-  cursor: w-resize;
+  width: 6px;
+  cursor: ew-resize;
 }
 
-/* Corners - make them rounded like paper corners */
 .resize-handle.nw {
-  top: -5px;
-  left: -5px;
-  width: 14px;
-  height: 14px;
-  cursor: nw-resize;
-  border-radius: 50%;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nwse-resize;
 }
 
 .resize-handle.ne {
-  top: -5px;
-  right: -5px;
-  width: 14px;
-  height: 14px;
-  cursor: ne-resize;
-  border-radius: 50%;
-}
-
-.resize-handle.se {
-  bottom: -5px;
-  right: -5px;
-  width: 14px;
-  height: 14px;
-  cursor: se-resize;
-  border-radius: 50%;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nesw-resize;
 }
 
 .resize-handle.sw {
-  bottom: -5px;
-  left: -5px;
-  width: 14px;
-  height: 14px;
-  cursor: sw-resize;
-  border-radius: 50%;
+  bottom: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nesw-resize;
+}
+
+.resize-handle.se {
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nwse-resize;
 }
 
 /* Window manager */

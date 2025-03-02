@@ -1,3 +1,4 @@
+/* Base desktop OS styling with Paper UI integration */
 .desktop-os {
   width: 100vw;
   height: 100vh;
@@ -5,13 +6,161 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  background-color: var(--paper-bg);
+  background-color: var(--neutral-300);
   opacity: 0;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out, background-color 0.3s ease;
+}
+
+/* Light theme (default) */
+.desktop-os.light {
+  --os-bg: var(--neutral-300);
+  --os-window-bg: var(--neutral-100);
+  --os-text: var(--neutral-900);
+  --os-border: var(--neutral-400);
+  --os-shadow: var(--shadow-lg);
+  --os-icon-bg: var(--neutral-100);
+  --os-highlight: var(--primary-blue-light);
+}
+
+/* Dark theme */
+.desktop-os.dark {
+  --os-bg: #232225;
+  --os-window-bg: #2d2b30;
+  --os-text: #f5f5f5;
+  --os-border: #3a383d;
+  --os-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --os-icon-bg: #3a383d;
+  --os-highlight: var(--primary-blue-light);
+  
+  background-color: var(--os-bg);
+}
+
+/* Apply theme colors to Paper UI elements in dark mode */
+.desktop-os.dark .paper-card {
+  background-color: var(--os-window-bg);
+  border: 1px solid var(--os-border);
+  color: var(--os-text);
+}
+
+.desktop-os.dark .paper-card-header {
+  border-bottom: 1px solid var(--os-border);
+}
+
+.desktop-os.dark .btn-secondary {
+  background-color: #3a383d;
+  color: #f5f5f5;
+}
+
+.desktop-os.dark .paper-nav {
+  background-color: #2d2b30;
+  border-color: #3a383d;
 }
 
 .desktop-os.loaded {
   opacity: 1;
+}
+
+/* Desktop workspace area */
+.desktop-workspace {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0; /* Remove padding to allow desktop to use full space */
+  width: 100%;
+  height: 100%;
+}
+
+/* App launcher styling with Paper UI */
+.launcher-wrapper {
+  position: absolute;
+  bottom: 54px;
+  left: 0;
+  z-index: 1000;
+  filter: drop-shadow(var(--shadow-xl));
+  width: 480px;
+  overflow: hidden;
+  animation: paperFold 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: bottom left;
+  border-radius: 0;
+  border-top-right-radius: var(--border-radius-md);
+}
+
+/* Add a slight border to connect with taskbar in light mode */
+.desktop-os.light .launcher-wrapper {
+  border: 1px solid var(--neutral-300);
+  border-bottom: none;
+  border-left: none;
+}
+
+/* And in dark mode */
+.desktop-os.dark .launcher-wrapper {
+  border: 1px solid var(--os-border);
+  border-bottom: none;
+  border-left: none;
+}
+
+/* Desktop animation keyframes */
+@keyframes paperFold {
+  from { 
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Make windows use Paper UI styling */
+.window {
+  background-color: var(--os-window-bg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--os-shadow);
+  border: 1px solid var(--os-border);
+  overflow: hidden;
+}
+
+.window-titlebar {
+  background-color: var(--os-window-bg);
+  border-bottom: 1px solid var(--os-border);
+  height: 48px;
+}
+
+.window-title {
+  color: var(--os-text);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: var(--text-base);
+}
+
+.window-content {
+  background-color: var(--os-window-bg);
+  color: var(--os-text);
+  padding: var(--space-5);
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .launcher-wrapper {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 480px) {
+  .launcher-wrapper {
+    width: 95vw;
+    bottom: 48px;
+  }
+  
+  .desktop-workspace {
+    padding: var(--space-2);
+  }
 }
 
 /* Position content first, taskbar last to keep it at the bottom */

@@ -1,145 +1,478 @@
+/* Paper UI styled app launcher */
 .app-launcher {
-  position: absolute;
-  bottom: 54px;
-  left: 10px;
-  width: 420px;
-  max-height: 520px;
-  background: var(--paper-white);
-  border-radius: 12px;
-  box-shadow: 0 5px 20px var(--shadow-medium), 0 2px 6px var(--shadow-soft);
-  z-index: 1000;
+  width: 100%;
+  height: 480px; /* Fixed height for consistency */
+  background: var(--os-window-bg);
+  /* Remove rounded corners */
+  border-radius: 0;
+  /* Only allow top-right corner to be rounded */
+  border-top-right-radius: var(--border-radius-md);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--paper-border);
-  animation: paperFold 0.4s forwards;
+  opacity: 0;
+  transform: translateY(10px) scale(0.97);
+  transform-origin: bottom left;
+  transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+.app-launcher.animate-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Elegant search bar */
 .launcher-search {
-  padding: 18px 20px;
-  background: var(--paper-cream);
-  border-bottom: 1px solid var(--paper-border);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--os-border);
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-5);
+  color: var(--neutral-600);
+  font-size: 14px;
+}
+
+.desktop-os.dark .search-icon {
+  color: var(--neutral-500);
 }
 
 .launcher-search input {
   width: 100%;
-  padding: 12px 20px;
-  border-radius: 25px;
-  border: 1px solid var(--paper-gray);
+  padding: 12px 12px 12px 38px;
+  border: none;
   outline: none;
-  background-color: var(--paper-white);
-  color: var(--ink-dark);
-  font-family: var(--font-serif);
-  font-size: 14px;
-  box-shadow: inset 0 1px 3px var(--shadow-soft);
-  transition: all 0.3s;
+  background: transparent;
+  color: var(--os-text);
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
-.launcher-search input:focus {
-  border-color: var(--ink-light);
-  box-shadow: inset 0 1px 3px var(--shadow-soft), 0 0 0 2px rgba(158, 145, 130, 0.1);
+.launcher-search input::placeholder {
+  color: var(--neutral-600);
+  opacity: 0.7;
 }
 
+.desktop-os.dark .launcher-search input::placeholder {
+  color: var(--neutral-500);
+}
+
+/* Two-column layout */
 .launcher-content {
   flex: 1;
-  padding: 20px;
-  overflow-y: auto;
+  display: flex;
+  overflow: hidden;
+  height: calc(100% - 60px); /* Search bar height is roughly 60px */
 }
 
-.launcher-category {
-  margin-bottom: 30px;
-  animation: fadeIn 0.5s forwards;
-  opacity: 0;
+/* Sidebar with categories */
+.launcher-sidebar {
+  width: 130px;
+  min-width: 130px; /* Prevent resizing */
+  max-width: 130px; /* Prevent resizing */
+  background: rgba(0, 0, 0, 0.05);
+  padding: var(--space-3) 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--os-border);
 }
 
-.category-title {
-  color: var(--ink-light);
-  font-size: 14px;
-  margin-bottom: 18px;
-  padding-left: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-family: var(--font-sans);
-  border-left: 3px solid var(--paper-sepia);
+.desktop-os.dark .launcher-sidebar {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.category-btn {
   display: flex;
   align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: var(--font-primary);
+  color: var(--os-text);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.2s ease;
+  opacity: 0.8;
 }
 
-.category-title:after {
-  content: '';
+.category-btn svg {
+  margin-right: var(--space-2);
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.category-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  opacity: 1;
+}
+
+.desktop-os.dark .category-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.category-btn.active {
+  background: rgba(0, 0, 0, 0.1);
+  border-left: 2px solid var(--os-highlight);
+  color: var(--os-highlight);
+  font-weight: 500;
+  opacity: 1;
+}
+
+.desktop-os.dark .category-btn.active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.category-btn.active svg {
+  opacity: 1;
+  color: var(--os-highlight);
+}
+
+/* Apps container */
+.launcher-apps-container {
   flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--paper-sepia), transparent);
-  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0; /* Crucial for proper scrolling */
 }
 
-.category-apps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 15px;
+.search-results-label {
+  padding: var(--space-3) var(--space-4);
+  color: var(--neutral-600);
+  font-size: var(--text-sm);
+  font-style: italic;
+  background: rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid var(--os-border);
 }
 
-.launcher-app {
+.desktop-os.dark .search-results-label {
+  color: var(--neutral-500);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.launcher-apps {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden; /* No horizontal scrolling */
+  padding: var(--space-3);
+  height: 100%;
+}
+
+/* App card design */
+.app-card {
+  display: flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-2);
+  border-radius: var(--border-radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeSlideIn 0.3s ease-out forwards;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.desktop-os.dark .app-card {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.desktop-os.dark .app-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.app-card:active {
+  transform: translateY(0px);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Improved App Icon Design */
+.app-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+  color: var(--primary-blue-light);
+  font-size: 18px;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   position: relative;
+  overflow: hidden;
+}
+
+/* Glow effect inside icon */
+.app-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+  opacity: 0.4;
+  z-index: 1;
+}
+
+/* Paper texture effect */
+.app-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Position icon properly within container */
+.app-icon svg {
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Dark theme styling */
+.desktop-os.dark .app-icon {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Enhanced dark theme app icons in launcher */
+.desktop-os.dark .app-icon {
+  background: linear-gradient(135deg, #383838 0%, #2c2c2c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 
+              inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Enhance glow effect in dark mode */
+.desktop-os.dark .app-icon::before {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+  opacity: 0.2;
+}
+
+/* Hover effects */
+.app-card:hover .app-icon {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+
+.app-card:active .app-icon {
+  transform: translateY(0px);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 1px 1px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+  transition: all 0.1s ease;
+}
+
+/* Enhanced hover effect for dark mode */
+.desktop-os.dark .app-card:hover .app-icon {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3),
+              inset 0 1px 1px rgba(255, 255, 255, 0.1),
+              0 0 12px rgba(58, 16, 229, 0.25);
+  border-color: var(--primary-blue-light);
+}
+
+.desktop-os.dark .app-card:hover .app-icon {
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.08),
+    0 0 10px rgba(58, 16, 229, 0.15);
+}
+
+.desktop-os.dark .app-card:active .app-icon {
+  box-shadow: 
+    0 1px 4px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Category-specific icon colors */
+.app-card[data-category="personal"] .app-icon {
+  color: #e51691; /* Pink */
+}
+
+.app-card[data-category="work"] .app-icon {
+  color: #58cb8e; /* Green */
+}
+
+.app-card[data-category="tools"] .app-icon {
+  color: #3a10e5; /* Blue */
+}
+
+/* Vibrant icon colors in dark mode */
+.desktop-os.dark .app-card[data-category="personal"] .app-icon {
+  color: #ff5dae; /* Brighter pink */
+  filter: drop-shadow(0 0 4px rgba(255, 93, 174, 0.5));
+}
+
+.desktop-os.dark .app-card[data-category="work"] .app-icon {
+  color: #7defa1; /* Brighter green */
+  filter: drop-shadow(0 0 4px rgba(125, 239, 161, 0.5));
+}
+
+.desktop-os.dark .app-card[data-category="tools"] .app-icon {
+  color: #7c5dff; /* Brighter blue/purple */
+  filter: drop-shadow(0 0 4px rgba(124, 93, 255, 0.5));
+}
+
+.app-info {
+  flex: 1;
+  margin-left: var(--space-4);
+  overflow: hidden;
+}
+
+.app-name {
+  color: var(--os-text);
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-description {
+  color: var(--neutral-600);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.desktop-os.dark .app-description {
+  color: var(--neutral-500);
+}
+
+.app-arrow {
+  color: var(--neutral-600);
+  font-size: 12px;
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: all 0.25s ease;
+}
+
+.desktop-os.dark .app-arrow {
+  color: var(--neutral-500);
+}
+
+.app-card:hover .app-arrow {
+  opacity: 0.8;
+  transform: translateX(0);
+}
+
+/* Empty state */
+.no-results {
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 18px 5px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s;
-  background: var(--paper-white);
-  border: 1px solid var(--paper-border);
-  box-shadow: 0 1px 3px var(--shadow-soft);
-  overflow: hidden;
-}
-
-.launcher-app:hover {
-  background: #ffffff;
-  transform: translateY(-3px);
-  box-shadow: 0 3px 10px var(--shadow-medium);
-  border-color: #ffffff;
-  animation: pageCurl 0.3s forwards;
-}
-
-.launcher-app svg {
-  font-size: 28px;
-  color: var(--ink-medium);
-  margin-bottom: 10px;
-  transition: all 0.3s;
-}
-
-.launcher-app:hover svg {
-  color: var(--accent-blue);
-  transform: scale(1.15);
-}
-
-.launcher-app span {
-  font-family: var(--font-serif);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink-dark);
+  color: var(--neutral-600);
   text-align: center;
-  transition: all 0.2s;
+  padding: var(--space-6);
 }
 
-/* Each category has a staggered fadeIn */
-.launcher-category:nth-child(1) {
-  animation-delay: 0.1s;
+.desktop-os.dark .no-results {
+  color: var(--neutral-500);
 }
 
-.launcher-category:nth-child(2) {
-  animation-delay: 0.2s;
+.no-results-icon {
+  font-size: 24px;
+  margin-bottom: var(--space-3);
+  opacity: 0.6;
 }
 
-.launcher-category:nth-child(3) {
-  animation-delay: 0.3s;
+.no-results p {
+  font-size: var(--text-sm);
+  font-style: italic;
 }
 
-/* Active/pressed state */
-.launcher-app:active {
-  transform: scale(0.97);
-  animation: inkSpread 0.5s;
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .launcher-sidebar {
+    width: 100px;
+  }
+  
+  .category-btn {
+    padding: var(--space-2);
+  }
+  
+  .category-btn svg {
+    font-size: 12px;
+  }
+  
+  .category-btn span {
+    font-size: 12px;
+  }
+}
+
+/* Enhance app card styling in dark mode */
+.desktop-os.dark .app-card {
+  background: rgba(40, 40, 45, 0.6);
+  border: 1px solid rgba(60, 60, 70, 0.3);
+}
+
+.desktop-os.dark .app-card:hover {
+  background: rgba(50, 50, 60, 0.7);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-color: rgba(80, 80, 100, 0.4);
+}
+
+.desktop-os.dark .app-name {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.desktop-os.dark .app-description {
+  color: #b8b8c0; /* Lighter text for better contrast */
+}
+
+.desktop-os.dark .app-card:hover .app-arrow {
+  color: #b8b8c0;
+  opacity: 1;
 }

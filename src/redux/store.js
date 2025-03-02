@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import osReducer from './osSlice';
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
-    os: osReducer,
-  },
+    os: osReducer
+  }
 });
-
-export default store;

@@ -2,21 +2,35 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70px; /* Reduced width since no text */
-  height: 70px; /* Fixed height since no text */
+  width: 80px;
   cursor: pointer;
   padding: var(--space-2);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1), 
               background-color 0.25s ease;
   animation: fadeIn 0.7s forwards;
   opacity: 0;
-  margin-bottom: var(--space-3); /* Reduced margin */
+  margin-bottom: var(--space-3);
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Handle dark theme */
+.desktop-os.dark .desktop-icon {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .desktop-icon:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.desktop-os.dark .desktop-icon:hover {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .desktop-icon:active {
@@ -24,48 +38,82 @@
   transition: transform 0.1s ease;
 }
 
-/* Elegant icon container - expanded to fill the entire icon area */
+/* Enhanced icon container styling */
 .icon-container {
-  width: 100%;
-  height: 100%;
+  width: 54px;
+  height: 54px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ink-medium);
   position: relative;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(248,245,240,1) 100%);
-  box-shadow: var(--shadow-md), 
-              0 15px 25px -10px rgba(0, 0, 0, 0.12),
-              inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffffff 0%, #f6f6f6 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08),
+              inset 0 1px 1px rgba(255, 255, 255, 0.9);
   transition: all 0.35s cubic-bezier(0.19, 1, 0.22, 1);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  animation: subtleFloat 5s infinite ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+/* Completely revamp dark theme icon styling */
+.desktop-os.dark .icon-container {
+  background: linear-gradient(135deg, #363636 0%, #2c2c2c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
+              inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+.desktop-os.dark .icon-container.hovered {
+  background: linear-gradient(135deg, #444444 0%, #353535 100%);
+  border-color: var(--primary-blue-light);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35),
+              inset 0 1px 2px rgba(255, 255, 255, 0.15),
+              0 0 10px rgba(58, 16, 229, 0.2);
 }
 
 .icon-container.hovered {
-  color: var(--accent-blue);
-  background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,245,255,1) 100%);
-  border-color: rgba(255, 255, 255, 0.95);
-  box-shadow: var(--shadow-lg),
-              0 20px 30px -10px rgba(0, 0, 0, 0.18),
-              inset 0 1px 1px rgba(255, 255, 255, 0.8);
-  transform: scale(1.08);
+  transform: scale(1.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12),
+              inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.desktop-os.dark .icon-container.hovered {
+  background: linear-gradient(135deg, #3a383d 0%, #45424a 100%);
+  border-color: var(--primary-blue-light);
 }
 
 .icon-glow {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
   opacity: 0;
-  transition: all 0.5s;
+  transition: opacity 0.5s ease;
 }
 
 .icon-container.hovered .icon-glow {
-  opacity: 0.6;
-  animation: glowPulse 3s infinite;
+  opacity: 0.7;
+  animation: glowPulse 2s infinite;
+}
+
+/* Enhanced glow effect for dark mode */
+.desktop-os.dark .icon-glow {
+  background: radial-gradient(circle at 30% 30%, rgba(122, 89, 255, 0.6) 0%, transparent 70%);
+  opacity: 0.15;
+}
+
+.desktop-os.dark .icon-container.hovered .icon-glow {
+  opacity: 0.5;
+  animation: darkGlowPulse 2s infinite;
+}
+
+@keyframes darkGlowPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.95); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.desktop-os.dark .icon-container .icon-glow {
+  background: radial-gradient(circle at center, rgba(90, 120, 200, 0.5) 0%, transparent 70%);
 }
 
 .icon-container::before {
@@ -86,17 +134,95 @@
   transform: translateX(200%);
 }
 
+/* Enhanced icon style */
 .icon-container svg {
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
-  font-size: 28px; /* Slightly larger icon */
-  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  color: #3a10e5; /* Default color */
+  transition: all 0.3s ease;
 }
 
+/* Enhanced dark mode icon colors with better visibility */
+.desktop-os.dark .icon-container svg {
+  color: var(--primary-blue-light); /* Default dark theme color */
+  filter: drop-shadow(0 0 4px rgba(58, 16, 229, 0.4));
+}
+
+/* App-specific icon colors */
+.desktop-icon[data-id="about"] .icon-container svg { color: #e51691; }
+.desktop-icon[data-id="projects"] .icon-container svg { color: #58cb8e; }
+.desktop-icon[data-id="skills"] .icon-container svg { color: #3a10e5; }
+.desktop-icon[data-id="github"] .icon-container svg { color: #333333; }
+.desktop-icon[data-id="browser"] .icon-container svg { color: #0086f8; }
+.desktop-icon[data-id="contact"] .icon-container svg { color: #ff6347; }
+.desktop-icon[data-id="terminal"] .icon-container svg { color: #444444; }
+
+/* Specific dark theme app icons with vibrant colors */
+.desktop-os.dark .desktop-icon[data-id="about"] .icon-container svg { 
+  color: #ff5dae; 
+  filter: drop-shadow(0 0 4px rgba(255, 93, 174, 0.5));
+}
+
+.desktop-os.dark .desktop-icon[data-id="projects"] .icon-container svg { 
+  color: #7defa1; 
+  filter: drop-shadow(0 0 4px rgba(125, 239, 161, 0.5));
+}
+
+.desktop-os.dark .desktop-icon[data-id="skills"] .icon-container svg { 
+  color: #7c5dff; 
+  filter: drop-shadow(0 0 4px rgba(124, 93, 255, 0.5));
+}
+
+.desktop-os.dark .desktop-icon[data-id="github"] .icon-container svg { 
+  color: #ffffff; 
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+.desktop-os.dark .desktop-icon[data-id="browser"] .icon-container svg { 
+  color: #45acff; 
+  filter: drop-shadow(0 0 4px rgba(69, 172, 255, 0.5));
+}
+
+.desktop-os.dark .desktop-icon[data-id="contact"] .icon-container svg { 
+  color: #ff7c5d; 
+  filter: drop-shadow(0 0 4px rgba(255, 124, 93, 0.5));
+}
+
+.desktop-os.dark .desktop-icon[data-id="terminal"] .icon-container svg { 
+  color: #c8d0db; 
+  filter: drop-shadow(0 0 4px rgba(200, 208, 219, 0.5));
+}
+
+/* Dark theme colors */
+.desktop-os.dark .icon-container svg { color: #6400e4; } /* Default dark theme color */
+.desktop-os.dark .desktop-icon[data-id="github"] .icon-container svg { color: #f0f0f0; }
+.desktop-os.dark .desktop-icon[data-id="terminal"] .icon-container svg { color: #a0a0a0; }
+
 .icon-container.hovered svg {
-  transform: scale(1.15);
-  filter: drop-shadow(0 3px 5px rgba(92, 123, 156, 0.3));
+  transform: scale(1.05);
+}
+
+.icon-label {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--os-text);
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Enhanced dark theme label */
+.desktop-os.dark .icon-label {
+  background-color: rgba(30, 30, 35, 0.9);
+  color: white;
+  border: 1px solid rgba(100, 100, 120, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  text-shadow: none;
 }
 
 .desktop-icon.dragging {
@@ -107,6 +233,22 @@
 .desktop-icon.dragging .icon-container {
   transform: scale(0.95);
   box-shadow: var(--shadow-sm);
+}
+
+/* Collision animation */
+@keyframes collision-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.desktop-icon.collision-animation {
+  animation: collision-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
 }
 
 /* Adjust desktop spacing between icons */

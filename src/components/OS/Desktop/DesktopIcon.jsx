@@ -2,11 +2,30 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './DesktopIcon.css';
 
-const DesktopIcon = ({ id, name, icon, onClick, position, onDrag, draggable = true }) => {
+const DesktopIcon = ({ 
+  id, 
+  name, 
+  icon, 
+  onClick, 
+  position, 
+  onDrag, 
+  onDragStart, 
+  onDragEnd,
+  draggable = true, 
+  registerRef,
+  style
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const iconRef = useRef(null);
+  
+  // Register ref for collision detection
+  useEffect(() => {
+    if (registerRef) {
+      registerRef(id, iconRef.current);
+    }
+  }, [id, registerRef]);
   
   // Icon appearance when hovered
   const handleMouseEnter = () => {
@@ -17,7 +36,7 @@ const DesktopIcon = ({ id, name, icon, onClick, position, onDrag, draggable = tr
     setIsHovered(false);
   };
   
-  // Dragging functionality
+  // Fixed dragging functionality
   const handleMouseDown = (e) => {
     if (!draggable) return;
     
@@ -37,11 +56,13 @@ const DesktopIcon = ({ id, name, icon, onClick, position, onDrag, draggable = tr
     });
     
     setIsDragging(true);
+    if (onDragStart) onDragStart(id);
     
     // Prevent default to avoid text selection during drag
     e.preventDefault();
   };
   
+  // Fixed mouse move handler
   const handleMouseMove = (e) => {
     if (!isDragging || !draggable) return;
     
@@ -56,6 +77,10 @@ const DesktopIcon = ({ id, name, icon, onClick, position, onDrag, draggable = tr
   };
   
   const handleMouseUp = () => {
+    if (isDragging && onDragEnd) {
+      onDragEnd(id, position);
+    }
+    
     setIsDragging(false);
   };
   
@@ -70,31 +95,28 @@ const DesktopIcon = ({ id, name, icon, onClick, position, onDrag, draggable = tr
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, dragOffset]);
-  
-  // Add tooltip for name since we're removing visible text
-  useEffect(() => {
-    const node = iconRef.current;
-    if (node) {
-      node.title = name; // Set tooltip with icon name
-    }
-  }, [name]);
+  }, [isDragging, dragOffset, id, onDrag, onDragEnd, position]);
   
   return (
     <div 
       ref={iconRef}
       className={`desktop-icon ${isDragging ? 'dragging' : ''}`}
-      style={position ? { position: 'absolute', left: `${position.x}px`, top: `${position.y}px` } : {}}
+      style={{
+        ...style,
+        position: 'absolute',
+        left: `${position.x}px`,
+        top: `${position.y}px`
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseDown={handleMouseDown}
-      title={name}
+      data-id={id} // Add data attribute for per-icon styling
     >
       <div className={`icon-container ${isHovered ? 'hovered' : ''}`}>
         <div className="icon-glow" />
         <FontAwesomeIcon icon={icon} />
       </div>
-      {/* Text label removed */}
+      <div className="icon-label">{name}</div>
     </div>
   );
 };

@@ -6,229 +6,210 @@ import { minimizeApp } from '../../../redux/osSlice';
 import './Window.css';
 
 const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPosition, onActivate }) => {
-  const dispatch = useDispatch();
-  const windowRef = useRef(null);
-  const titlebarRef = useRef(null);
-  
-  // Initialize position state from props or default
-  const [position, setPosition] = useState({
-    x: initialPosition?.x || 100,
-    y: initialPosition?.y || 100
-  });
+  const [position, setPosition] = useState(initialPosition || { x: 50, y: 50 });
+  const [size, setSize] = useState({ width: 600, height: 400 });
   const [isMaximized, setIsMaximized] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  
-  // Size state for resizing
-  const [size, setSize] = useState({ width: 600, height: 400 });
   const [isResizing, setIsResizing] = useState(false);
-  const [resizeDirection, setResizeDirection] = useState(null);
-  const [resizeStartData, setResizeStartData] = useState(null);
-
-  // Window control functions
-  const handleMaximize = (e) => {
-    e.stopPropagation();
+  const [resizeDirection, setResizeDirection] = useState('');
+  const [resizeStartPos, setResizeStartPos] = useState({ x: 0, y: 0 });
+  const [resizeStartSize, setResizeStartSize] = useState({ width: 0, height: 0 });
+  
+  const windowRef = useRef(null);
+  const titlebarRef = useRef(null);
+  const dispatch = useDispatch();
+  
+  // Minimum window dimensions
+  const MIN_WIDTH = 300;
+  const MIN_HEIGHT = 200;
+  
+  // Window click/focus handler
+  const handleWindowClick = () => {
+    if (onActivate) {
+      onActivate();
+    }
+  };
+  
+  // Maximize/restore window
+  const handleMaximize = () => {
     setIsMaximized(!isMaximized);
   };
   
-  const handleMinimize = (e) => {
-    e.stopPropagation();
+  // Minimize window
+  const handleMinimize = () => {
     dispatch(minimizeApp(id));
   };
-
-  // Simple manual drag implementation
-  const startDrag = (e) => {
-    // Ignore if clicking on controls or when maximized
-    if (e.target.closest('.window-controls') || isMaximized) return;
+  
+  // ========== DRAGGING FUNCTIONALITY ==========
+  
+  const handleMouseDown = (e) => {
+    if (!titlebarRef.current || !titlebarRef.current.contains(e.target) || isMaximized) return;
     
-    setIsDragging(true);
-    const windowRect = windowRef.current.getBoundingClientRect();
-    
+    const rect = windowRef.current.getBoundingClientRect();
     setDragOffset({
-      x: e.clientX - windowRect.left,
-      y: e.clientY - windowRect.top
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
     });
-    
-    // Activate window when starting to drag
-    if (onActivate) onActivate();
-    
-    // Prevent text selection during drag
-    e.preventDefault();
+    setIsDragging(true);
   };
-
-  const handleDrag = (e) => {
-    if (!isDragging || isMaximized) return;
+  
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
     
     const newX = e.clientX - dragOffset.x;
     const newY = e.clientY - dragOffset.y;
     
-    // Update position
+    // Ensure window stays within viewport
+    const maxX = window.innerWidth - size.width;
+    const maxY = window.innerHeight - size.height;
+    
     setPosition({
-      x: newX,
-      y: newY
+      x: Math.max(0, Math.min(newX, maxX)),
+      y: Math.max(0, Math.min(newY, maxY))
     });
   };
-
-  const stopDrag = () => {
+  
+  const handleMouseUp = () => {
     setIsDragging(false);
   };
-
-  // Resize functionality
-  const startResize = (e, direction) => {
-    if (isMaximized) return;
-    
-    e.preventDefault();
+  
+  // ========== RESIZING FUNCTIONALITY ==========
+  
+  const handleResizeStart = (direction, e) => {
     e.stopPropagation();
-    
-    setIsResizing(true);
-    setResizeDirection(direction);
+    e.preventDefault();
     
     const rect = windowRef.current.getBoundingClientRect();
-    setResizeStartData({
-      startX: e.clientX,
-      startY: e.clientY,
-      startWidth: rect.width,
-      startHeight: rect.height,
-      startLeft: rect.left,
-      startTop: rect.top
-    });
-    
-    // Activate window when starting to resize
-    if (onActivate) onActivate();
+    setResizeStartPos({ x: e.clientX, y: e.clientY });
+    setResizeStartSize({ width: rect.width, height: rect.height });
+    setResizeDirection(direction);
+    setIsResizing(true);
   };
-
-  const handleResize = (e) => {
-    if (!isResizing || isMaximized) return;
+  
+  const handleResizeMove = (e) => {
+    if (!isResizing) return;
     
-    const { startX, startY, startWidth, startHeight, startLeft, startTop } = resizeStartData;
+    const deltaX = e.clientX - resizeStartPos.x;
+    const deltaY = e.clientY - resizeStartPos.y;
+    
     const direction = resizeDirection;
-    
-    // Calculate new dimensions
-    let newWidth = startWidth;
-    let newHeight = startHeight;
+    let newWidth = resizeStartSize.width;
+    let newHeight = resizeStartSize.height;
     let newX = position.x;
     let newY = position.y;
     
+    // Width adjustments
     if (direction.includes('e')) {
-      newWidth = Math.max(300, startWidth + (e.clientX - startX));
+      newWidth = Math.max(resizeStartSize.width + deltaX, MIN_WIDTH);
+    } else if (direction.includes('w')) {
+      const maxLeftResize = resizeStartSize.width - MIN_WIDTH;
+      const actualDelta = Math.max(-maxLeftResize, Math.min(deltaX, resizeStartSize.width));
+      newWidth = resizeStartSize.width - actualDelta;
+      newX = position.x + actualDelta;
     }
+    
+    // Height adjustments
     if (direction.includes('s')) {
-      newHeight = Math.max(200, startHeight + (e.clientY - startY));
-    }
-    if (direction.includes('w')) {
-      const widthChange = startX - e.clientX;
-      newWidth = Math.max(300, startWidth + widthChange);
-      newX = Math.min(position.x - widthChange, position.x + startWidth - 300);
-    }
-    if (direction.includes('n')) {
-      const heightChange = startY - e.clientY;
-      newHeight = Math.max(200, startHeight + heightChange);
-      newY = Math.min(position.y - heightChange, position.y + startHeight - 200);
+      newHeight = Math.max(resizeStartSize.height + deltaY, MIN_HEIGHT);
+    } else if (direction.includes('n')) {
+      const maxTopResize = resizeStartSize.height - MIN_HEIGHT;
+      const actualDelta = Math.max(-maxTopResize, Math.min(deltaY, resizeStartSize.height));
+      newHeight = resizeStartSize.height - actualDelta;
+      newY = position.y + actualDelta;
     }
     
-    // Update state
     setSize({ width: newWidth, height: newHeight });
-    if (direction.includes('w') || direction.includes('n')) {
-      setPosition({ x: newX, y: newY });
-    }
+    setPosition({ x: newX, y: newY });
   };
-
-  const stopResize = () => {
+  
+  const handleResizeEnd = () => {
     setIsResizing(false);
-    setResizeDirection(null);
-    setResizeStartData(null);
   };
-
-  // Set up event listeners for dragging and resizing
+  
+  // Add event listeners
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (isDragging) {
-        handleDrag(e);
-      }
-      if (isResizing) {
-        handleResize(e);
-      }
-    };
-    
-    const handleMouseUp = () => {
-      stopDrag();
-      stopResize();
-    };
-    
-    if (isDragging || isResizing) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
     }
     
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, isResizing, dragOffset, resizeDirection, resizeStartData]);
+  }, [isDragging]);
   
   useEffect(() => {
-    if (titlebarRef.current) {
-      titlebarRef.current.addEventListener('mousedown', startDrag);
-      return () => {
-        titlebarRef.current?.removeEventListener('mousedown', startDrag);
-      };
+    if (isResizing) {
+      window.addEventListener('mousemove', handleResizeMove);
+      window.addEventListener('mouseup', handleResizeEnd);
+    } else {
+      window.removeEventListener('mousemove', handleResizeMove);
+      window.removeEventListener('mouseup', handleResizeEnd);
     }
-  }, []);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleResizeMove);
+      window.removeEventListener('mouseup', handleResizeEnd);
+    };
+  }, [isResizing, resizeDirection]);
   
-  // Handle window activation on click
-  const handleWindowClick = () => {
-    if (onActivate) onActivate();
+  // Helper function to get window style based on state
+  const getWindowStyle = () => {
+    if (isMaximized) {
+      return { width: '100%', height: '100%' };
+    }
+    
+    return {
+      left: `${position.x}px`,
+      top: `${position.y}px`,
+      width: `${size.width}px`,
+      height: `${size.height}px`,
+      display: isMinimized ? 'none' : 'flex'
+    };
   };
-  
-  if (isMinimized) return null;
-  
-  // Window style with position and size
-  const windowStyle = isMaximized 
-    ? { width: '100%', height: 'calc(100vh - 52px)', top: 0, left: 0 }
-    : { 
-        width: `${size.width}px`, 
-        height: `${size.height}px`, 
-        top: `${position.y}px`, 
-        left: `${position.x}px` 
-      };
   
   return (
     <div 
       ref={windowRef}
-      className={`window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''}`}
-      style={windowStyle}
+      className={`window paper-card ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''}`}
+      style={getWindowStyle()}
       onClick={handleWindowClick}
     >
-      <div ref={titlebarRef} className="window-titlebar">
+      <div ref={titlebarRef} className="window-titlebar paper-card-header" onMouseDown={handleMouseDown}>
         <div className="window-title">{title}</div>
         <div className="window-controls">
-          <button className="window-btn minimize" onClick={handleMinimize}>
+          <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">
             <FontAwesomeIcon icon={faWindowMinimize} />
           </button>
-          <button className="window-btn maximize" onClick={handleMaximize}>
+          <button className="window-btn maximize" onClick={handleMaximize} title={isMaximized ? "Restore" : "Maximize"}>
             <FontAwesomeIcon icon={isMaximized ? faWindowRestore : faWindowMaximize} />
           </button>
-          <button className="window-btn close" onClick={onClose}>
+          <button className="window-btn close" onClick={onClose} title="Close">
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
       </div>
       
-      <div className="window-content">
+      <div className="window-content paper-card-content">
         {children}
       </div>
       
       {/* Resize handles */}
       {!isMaximized && (
         <>
-          <div className="resize-handle n" onMouseDown={(e) => startResize(e, 'n')}></div>
-          <div className="resize-handle e" onMouseDown={(e) => startResize(e, 'e')}></div>
-          <div className="resize-handle s" onMouseDown={(e) => startResize(e, 's')}></div>
-          <div className="resize-handle w" onMouseDown={(e) => startResize(e, 'w')}></div>
-          <div className="resize-handle ne" onMouseDown={(e) => startResize(e, 'ne')}></div>
-          <div className="resize-handle se" onMouseDown={(e) => startResize(e, 'se')}></div>
-          <div className="resize-handle sw" onMouseDown={(e) => startResize(e, 'sw')}></div>
-          <div className="resize-handle nw" onMouseDown={(e) => startResize(e, 'nw')}></div>
+          <div className="resize-handle n" onMouseDown={(e) => handleResizeStart('n', e)}></div>
+          <div className="resize-handle ne" onMouseDown={(e) => handleResizeStart('ne', e)}></div>
+          <div className="resize-handle e" onMouseDown={(e) => handleResizeStart('e', e)}></div>
+          <div className="resize-handle se" onMouseDown={(e) => handleResizeStart('se', e)}></div>
+          <div className="resize-handle s" onMouseDown={(e) => handleResizeStart('s', e)}></div>
+          <div className="resize-handle sw" onMouseDown={(e) => handleResizeStart('sw', e)}></div>
+          <div className="resize-handle w" onMouseDown={(e) => handleResizeStart('w', e)}></div>
+          <div className="resize-handle nw" onMouseDown={(e) => handleResizeStart('nw', e)}></div>
         </>
       )}
     </div>
