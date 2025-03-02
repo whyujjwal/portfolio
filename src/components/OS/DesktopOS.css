@@ -76,7 +76,7 @@
 /* App launcher styling with Paper UI */
 .launcher-wrapper {
   position: absolute;
-  bottom: 54px;
+  bottom: 0; /* Change this to 0 to connect directly with taskbar */
   left: 0;
   z-index: 1000;
   filter: drop-shadow(var(--shadow-xl));
@@ -86,6 +86,8 @@
   transform-origin: bottom left;
   border-radius: 0;
   border-top-right-radius: var(--border-radius-md);
+  /* Add connection styling */
+  margin-bottom: -1px; /* Pull down to overlap taskbar by 1px */
 }
 
 /* Add a slight border to connect with taskbar in light mode */
@@ -93,6 +95,7 @@
   border: 1px solid var(--neutral-300);
   border-bottom: none;
   border-left: none;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* And in dark mode */
@@ -100,6 +103,7 @@
   border: 1px solid var(--os-border);
   border-bottom: none;
   border-left: none;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Desktop animation keyframes */

@@ -20,12 +20,12 @@ const TaskbarItem = ({ app }) => {
   
   return (
     <button 
-      className={`taskbar-button ${app.isActive && !app.isMinimized ? 'active' : ''}`} 
+      className={`taskbar-button ${app.isActive && !app.isMinimized ? 'active' : ''} ${app.isMinimized ? 'minimized' : ''}`}
       onClick={handleClick}
       title={app.title}
     >
-      <div className="taskbar-item-indicator"></div>
       <FontAwesomeIcon icon={icon} />
+      <div className="taskbar-item-indicator"></div>
     </button>
   );
 };
