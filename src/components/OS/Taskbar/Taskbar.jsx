@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faMoon, faSun, faCog, faBell, 
-  faVolumeUp, faSearch, faWifi, faBatteryThreeQuarters
+  faVolumeUp, faSearch, faWifi, faBatteryThreeQuarters, faCode, faVolumeMute
 } from '@fortawesome/free-solid-svg-icons';
 import { faWindows } from '@fortawesome/free-brands-svg-icons';
 import Clock from './Clock';
@@ -57,7 +57,11 @@ const Taskbar = ({
   
   // Handle volume change
   const handleVolumeChange = (e) => {
-    setVolume(parseInt(e.target.value));
+    const newVolume = parseInt(e.target.value);
+    setVolume(newVolume);
+    
+    // Update custom property for slider gradient
+    e.target.style.setProperty('--volume-percent', `${newVolume}%`);
   };
   
   // Toggle search
@@ -140,7 +144,7 @@ const Taskbar = ({
                 <p>{currentDate}</p>
               </div>
               <div className="notifications-content">
-                <div className="notification-item">
+                <div className="notification-item" style={{animationDelay: '0.05s'}}>
                   <div className="notification-icon">
                     <FontAwesomeIcon icon={faWindows} />
                   </div>
@@ -148,6 +152,17 @@ const Taskbar = ({
                     <p className="notification-title">Welcome to Paper OS</p>
                     <p className="notification-message">Click on app icons to launch them.</p>
                     <p className="notification-time">Just now</p>
+                  </div>
+                </div>
+                
+                <div className="notification-item" style={{animationDelay: '0.1s'}}>
+                  <div className="notification-icon">
+                    <FontAwesomeIcon icon={faCode} />
+                  </div>
+                  <div className="notification-text">
+                    <p className="notification-title">Portfolio Ready</p>
+                    <p className="notification-message">Your portfolio is ready to explore.</p>
+                    <p className="notification-time">5 minutes ago</p>
                   </div>
                 </div>
               </div>
@@ -178,11 +193,10 @@ const Taskbar = ({
                 <div className="quick-settings-row">
                   <span>{theme === 'light' ? 'Light Mode' : 'Dark Mode'}</span>
                   <button 
-                    className="paper-toggle"
+                    className={`paper-toggle ${theme === 'dark' ? 'active' : ''}`}
                     onClick={toggleTheme}
                     aria-label="Toggle theme"
                   >
-                    <FontAwesomeIcon icon={theme === 'light' ? faSun : faMoon} />
                   </button>
                 </div>
                 
@@ -190,7 +204,7 @@ const Taskbar = ({
                 <div className="quick-settings-row">
                   <span>Volume</span>
                   <div className="volume-control">
-                    <FontAwesomeIcon icon={faVolumeUp} />
+                    <FontAwesomeIcon icon={volume === 0 ? faVolumeMute : faVolumeUp} />
                     <input 
                       type="range" 
                       min="0" 
@@ -198,6 +212,7 @@ const Taskbar = ({
                       value={volume} 
                       onChange={handleVolumeChange}
                       className="volume-slider"
+                      style={{'--volume-percent': `${volume}%`}}
                     />
                     <span className="volume-value">{volume}%</span>
                   </div>
@@ -207,7 +222,6 @@ const Taskbar = ({
                 <div className="quick-settings-row">
                   <span>Wi-Fi</span>
                   <button className="paper-toggle active">
-                    <FontAwesomeIcon icon={faWifi} />
                   </button>
                 </div>
                 
