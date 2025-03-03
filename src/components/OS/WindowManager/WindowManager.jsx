@@ -10,6 +10,7 @@ import ProjectsApp from '../Apps/ProjectsApp';
 import SkillsApp from '../Apps/SkillsApp';
 import ContactApp from '../Apps/ContactApp';
 import TerminalApp from '../Apps/TerminalApp';
+import GitHubApp from '../Apps/GitHubApp';
 
 // App components mapping
 const appComponents = {
@@ -17,7 +18,8 @@ const appComponents = {
   projects: { component: ProjectsApp, title: 'Projects' },
   skills: { component: SkillsApp, title: 'Skills' },
   contact: { component: ContactApp, title: 'Contact' },
-  terminal: { component: TerminalApp, title: 'Terminal' }
+  terminal: { component: TerminalApp, title: 'Terminal' },
+  github: { component: GitHubApp, title: 'GitHub Profile' }
 };
 
 const WindowManager = ({ openApps }) => {
