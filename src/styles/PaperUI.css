@@ -66,6 +66,28 @@
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
   --transition-slow: 350ms ease;
+
+  /* Paper Window Variables */
+  --paper-window-border: var(--neutral-300);
+  --paper-window-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --paper-window-shadow-active: 0 14px 45px rgba(0, 0, 0, 0.15);
+  --paper-window-bg: var(--neutral-100);
+  --paper-window-titlebar-bg: var(--neutral-100);
+  --paper-window-titlebar-border: var(--neutral-300);
+  --paper-window-titlebar-text: var(--neutral-800);
+  --paper-window-titlebar-active-text: var(--primary-blue);
+  
+  /* Window Control Button Colors */
+  --window-btn-close: var(--accent-pink);
+  --window-btn-close-hover: #ff4081;
+  --window-btn-minimize: var(--neutral-300);
+  --window-btn-minimize-hover: var(--neutral-400);
+  --window-btn-maximize: var(--neutral-300);
+  --window-btn-maximize-hover: var(--neutral-400);
+  
+  /* Window animation speeds */
+  --window-transition-speed: 280ms;
+  --window-animation-curve: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 /* Base Resets */

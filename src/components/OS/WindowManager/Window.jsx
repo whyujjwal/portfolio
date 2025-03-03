@@ -15,6 +15,7 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   const [resizeDirection, setResizeDirection] = useState('');
   const [resizeStartPos, setResizeStartPos] = useState({ x: 0, y: 0 });
   const [resizeStartSize, setResizeStartSize] = useState({ width: 0, height: 0 });
+  const [isAnimating, setIsAnimating] = useState(false);
   
   const windowRef = useRef(null);
   const titlebarRef = useRef(null);
@@ -31,14 +32,24 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
     }
   };
   
-  // Maximize/restore window
+  // Maximize/restore window with animation
   const handleMaximize = () => {
-    setIsMaximized(!isMaximized);
+    setIsAnimating(true);
+    setTimeout(() => {
+      setIsMaximized(!isMaximized);
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 300); // Match this with CSS transition time
+    }, 10);
   };
   
   // Minimize window
   const handleMinimize = () => {
-    dispatch(minimizeApp(id));
+    setIsAnimating(true);
+    setTimeout(() => {
+      dispatch(minimizeApp(id));
+      setIsAnimating(false);
+    }, 300);
   };
   
   // ========== DRAGGING FUNCTIONALITY ==========
@@ -46,12 +57,16 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   const handleMouseDown = (e) => {
     if (!titlebarRef.current || !titlebarRef.current.contains(e.target) || isMaximized) return;
     
+    // Don't start dragging if we clicked on a button in the titlebar
+    if (e.target.closest('.window-btn')) return;
+    
     const rect = windowRef.current.getBoundingClientRect();
     setDragOffset({
       x: e.clientX - rect.left,
       y: e.clientY - rect.top
     });
     setIsDragging(true);
+    windowRef.current.classList.add('dragging');
   };
   
   const handleMouseMove = (e) => {
@@ -71,6 +86,9 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   };
   
   const handleMouseUp = () => {
+    if (isDragging) {
+      windowRef.current.classList.remove('dragging');
+    }
     setIsDragging(false);
   };
   
@@ -85,6 +103,7 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
     setResizeStartSize({ width: rect.width, height: rect.height });
     setResizeDirection(direction);
     setIsResizing(true);
+    windowRef.current.classList.add('resizing');
   };
   
   const handleResizeMove = (e) => {
@@ -124,6 +143,9 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   };
   
   const handleResizeEnd = () => {
+    if (isResizing) {
+      windowRef.current.classList.remove('resizing');
+    }
     setIsResizing(false);
   };
   
@@ -176,11 +198,16 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   return (
     <div 
       ref={windowRef}
-      className={`window paper-card ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''}`}
+      className={`window paper-card 
+        ${isActive ? 'active' : ''} 
+        ${isMaximized ? 'maximized' : ''} 
+        ${isAnimating ? 'animating' : ''}
+        app-${id}
+      `}
       style={getWindowStyle()}
       onClick={handleWindowClick}
     >
-      <div ref={titlebarRef} className="window-titlebar paper-card-header" onMouseDown={handleMouseDown}>
+      <div ref={titlebarRef} className="window-titlebar" onMouseDown={handleMouseDown}>
         <div className="window-title">{title}</div>
         <div className="window-controls">
           <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">
@@ -199,7 +226,7 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
         {children}
       </div>
       
-      {/* Resize handles */}
+      {/* Resize handles - only visible when not maximized */}
       {!isMaximized && (
         <>
           <div className="resize-handle n" onMouseDown={(e) => handleResizeStart('n', e)}></div>
