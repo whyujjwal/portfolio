@@ -16,6 +16,7 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   const [resizeStartPos, setResizeStartPos] = useState({ x: 0, y: 0 });
   const [resizeStartSize, setResizeStartSize] = useState({ width: 0, height: 0 });
   const [isAnimating, setIsAnimating] = useState(false);
+  const [focusTimestamp, setFocusTimestamp] = useState(Date.now());
   
   const windowRef = useRef(null);
   const titlebarRef = useRef(null);
@@ -25,31 +26,34 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   const MIN_WIDTH = 300;
   const MIN_HEIGHT = 200;
   
-  // Window click/focus handler
+  // Window click/focus handler with subtle animation
   const handleWindowClick = () => {
     if (onActivate) {
+      setFocusTimestamp(Date.now());
       onActivate();
     }
   };
   
-  // Maximize/restore window with animation
+  // Maximize/restore window with smooth animation
   const handleMaximize = () => {
     setIsAnimating(true);
     setTimeout(() => {
       setIsMaximized(!isMaximized);
       setTimeout(() => {
         setIsAnimating(false);
-      }, 300); // Match this with CSS transition time
+      }, 250);
     }, 10);
   };
   
-  // Minimize window
+  // Minimize window with animation
   const handleMinimize = () => {
     setIsAnimating(true);
+    windowRef.current.style.animation = 'windowClose 0.25s cubic-bezier(0.19, 1, 0.22, 1) forwards';
     setTimeout(() => {
       dispatch(minimizeApp(id));
       setIsAnimating(false);
-    }, 300);
+      windowRef.current.style.animation = '';
+    }, 250);
   };
   
   // ========== DRAGGING FUNCTIONALITY ==========
@@ -57,7 +61,7 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
   const handleMouseDown = (e) => {
     if (!titlebarRef.current || !titlebarRef.current.contains(e.target) || isMaximized) return;
     
-    // Don't start dragging if we clicked on a button in the titlebar
+    // Don't start dragging if we clicked on a button
     if (e.target.closest('.window-btn')) return;
     
     const rect = windowRef.current.getBoundingClientRect();
@@ -67,6 +71,9 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
     });
     setIsDragging(true);
     windowRef.current.classList.add('dragging');
+    
+    // Ensure window is active when starting to drag
+    if (onActivate) onActivate();
   };
   
   const handleMouseMove = (e) => {
@@ -75,7 +82,7 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
     const newX = e.clientX - dragOffset.x;
     const newY = e.clientY - dragOffset.y;
     
-    // Ensure window stays within viewport
+    // Ensure window stays within viewport with some margin
     const maxX = window.innerWidth - size.width;
     const maxY = window.innerHeight - size.height;
     
@@ -104,8 +111,12 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
     setResizeDirection(direction);
     setIsResizing(true);
     windowRef.current.classList.add('resizing');
+    
+    // Ensure window is active when starting to resize
+    if (onActivate) onActivate();
   };
   
+  // Rest of resizing functionality remains the same
   const handleResizeMove = (e) => {
     if (!isResizing) return;
     
@@ -191,14 +202,15 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
       top: `${position.y}px`,
       width: `${size.width}px`,
       height: `${size.height}px`,
-      display: isMinimized ? 'none' : 'flex'
+      display: isMinimized ? 'none' : 'flex',
+      zIndex: isActive ? 100 + focusTimestamp % 10 : 10, // Ensures proper stacking
     };
   };
   
   return (
     <div 
       ref={windowRef}
-      className={`window paper-card 
+      className={`window
         ${isActive ? 'active' : ''} 
         ${isMaximized ? 'maximized' : ''} 
         ${isAnimating ? 'animating' : ''}
@@ -222,7 +234,7 @@ const Window = ({ id, title, children, onClose, isActive, isMinimized, initialPo
         </div>
       </div>
       
-      <div className="window-content paper-card-content">
+      <div className="window-content">
         {children}
       </div>
       

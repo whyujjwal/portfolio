@@ -1,40 +1,40 @@
-/* Elegant Paper-themed Window Styling */
+/* Elegant Flat Paper Window Styling */
 
 .window {
   position: absolute;
   display: flex;
   flex-direction: column;
   background-color: var(--neutral-100);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
   overflow: hidden;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  border: 1px solid var(--neutral-300);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   z-index: 10;
+  backdrop-filter: blur(4px);
 }
 
 /* Active window styling */
 .window.active {
   z-index: 100;
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12), 0 1px 6px rgba(0, 0, 0, 0.05);
 }
 
 /* Animation class for window state transitions */
 .window.animating {
-  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 /* Dragging state */
 .window.dragging {
-  opacity: 0.92;
-  transform: scale(1.005);
+  opacity: 0.98;
+  transform: scale(1.002);
   transition: none;
-  box-shadow: var(--shadow-xl), 0 0 0 1px var(--primary-blue-light);
 }
 
 /* Resizing state */
 .window.resizing {
-  opacity: 0.92;
+  opacity: 0.98;
   transition: none;
 }
 
@@ -48,16 +48,16 @@
   border: none;
 }
 
-/* Window titlebar styling */
+/* Window titlebar styling - flat and minimal */
 .window-titlebar {
   display: flex;
   align-items: center;
-  padding: 10px 16px;
+  padding: 8px 12px;
   background-color: var(--neutral-100);
-  border-bottom: 1px solid var(--neutral-300);
+  border-bottom: 1px solid var(--neutral-200);
   cursor: move;
   user-select: none;
-  height: 42px;
+  height: 38px;
 }
 
 /* Maximized titlebar styling */
@@ -68,13 +68,14 @@
 /* Window title styling */
 .window-title {
   flex: 1;
-  font-weight: 600;
-  color: var(--neutral-800);
-  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--neutral-700);
+  font-size: 0.9rem;
   margin-right: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: 0.2px;
 }
 
 .window.active .window-title {
@@ -85,59 +86,63 @@
 .window-controls {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
-/* Window control buttons */
+/* Window control buttons - minimalist flat style */
 .window-btn {
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 10px;
-  color: var(--neutral-600);
-  background-color: var(--neutral-200);
+  font-size: 8px;
+  color: transparent;
   transition: all 0.2s ease;
   padding: 0;
+  position: relative;
 }
 
-.window-btn:hover {
-  transform: scale(1.1);
+/* Hide icons by default for minimal look */
+.window-btn svg {
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
-/* Individual window button colors */
+/* Show icons on hover for usability */
+.window-btn:hover svg {
+  opacity: 1;
+}
+
+/* Individual window button colors - minimal dots */
 .window-btn.minimize {
-  color: var(--neutral-700);
-  background-color: var(--neutral-300);
+  background-color: #FFBD2E;
 }
 
 .window-btn.minimize:hover {
-  background-color: var(--neutral-400);
+  background-color: #FFD561;
 }
 
 .window-btn.maximize {
-  color: var(--neutral-800);
-  background-color: var(--neutral-300);
+  background-color: #28C841;
 }
 
 .window-btn.maximize:hover {
-  background-color: var(--neutral-400);
+  background-color: #5DD85D;
 }
 
 .window-btn.close {
-  color: white;
-  background-color: var(--accent-pink);
+  background-color: #FF5F57;
 }
 
 .window-btn.close:hover {
-  background-color: #ff4081;
+  background-color: #FF7B7B;
 }
 
-/* Window content area */
+/* Window content area - flat and clean */
 .window-content {
   flex: 1;
   overflow: auto;
@@ -145,7 +150,22 @@
   position: relative;
 }
 
-/* Resize handles */
+/* Paper texture effect */
+.window::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' fill='%23000000'/%3E%3C/svg%3E");
+  border-radius: inherit;
+  mix-blend-mode: multiply;
+}
+
+/* Resize handles - transparent and invisible until needed */
 .resize-handle {
   position: absolute;
   background-color: transparent;
@@ -161,16 +181,16 @@
 /* Edge resize handles */
 .resize-handle.n, .resize-handle.s {
   height: 6px;
-  left: 12px;
-  right: 12px;
+  left: 6px;
+  right: 6px;
   z-index: 20;
   cursor: ns-resize;
 }
 
 .resize-handle.e, .resize-handle.w {
   width: 6px;
-  top: 12px;
-  bottom: 12px;
+  top: 6px;
+  bottom: 6px;
   z-index: 20;
   cursor: ew-resize;
 }
@@ -225,98 +245,159 @@
   transform: translate(6px, 6px);
 }
 
-/* Window drop shadow effect when active */
-.window.active {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
-}
-
 /* Window state animations */
 @keyframes windowOpen {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.97) translateY(5px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
 @keyframes windowClose {
   from {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
   to {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.97) translateY(5px);
   }
 }
 
 /* Apply opening animation to new windows */
 .window {
-  animation: windowOpen 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  animation: windowOpen 0.25s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* App-specific styling can be added for windows based on app ID */
-.window.app-github .window-titlebar {
-  border-bottom-color: #24292e;
+/* Subtle hover effect */
+.window:not(.active):hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10), 0 1px 5px rgba(0, 0, 0, 0.05);
 }
 
-.window.app-terminal .window-titlebar {
-  background-color: #2c3e50;
-  color: white;
-}
-
-.window.app-terminal .window-title {
-  color: white;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .window {
-    min-width: 300px !important;
-  }
-  
-  .window-controls {
-    gap: 8px;
-  }
-  
-  .window-btn {
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
-  }
-}
-
-/* Paper UI integration */
-.window {
-  border-radius: var(--border-radius-lg);
-  background-color: var(--neutral-100);
-  box-shadow: var(--shadow-lg);
-}
-
-.window-titlebar {
-  border-top-left-radius: var(--border-radius-lg);
-  border-top-right-radius: var(--border-radius-lg);
-  border-bottom: 1px solid var(--neutral-300);
-}
-
-/* Paper texture effect */
-.window::before {
-  content: "";
+/* Active window indication - subtle accent border */
+.window.active::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  border-radius: var(--border-radius-lg);
-  pointer-events: none;
-  opacity: 0.4;
-  z-index: -1;
+  height: 3px;
+  background-color: var(--primary-blue-light);
+  z-index: 101;
 }
 
-.window.maximized::before {
-  border-radius: 0;
+/* App-specific styling customizations */
+.window.app-github {
+  box-shadow: 0 6px 24px rgba(36, 41, 46, 0.10), 0 1px 4px rgba(36, 41, 46, 0.05);
+}
+
+.window.app-github.active::before {
+  background-color: #24292e;
+}
+
+.window.app-terminal {
+  background-color: #202124;
+}
+
+.window.app-terminal .window-titlebar {
+  background-color: #202124;
+  border-bottom-color: #333;
+}
+
+.window.app-terminal .window-title {
+  color: #ddd;
+}
+
+.window.app-terminal .window-content {
+  background-color: #202124;
+  color: #ddd;
+}
+
+.window.app-terminal.active::before {
+  background-color: #2C8CFF;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .window {
+    min-width: 280px !important;
+  }
+  
+  .window-btn {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+  
+  .window-btn svg {
+    opacity: 1; /* Always show icons on mobile */
+  }
+}
+
+/* Add a subtle border highlight on the right and bottom for additional depth */
+.window:not(.maximized) {
+  box-shadow: 
+    0 6px 24px rgba(0, 0, 0, 0.08), 
+    0 1px 4px rgba(0, 0, 0, 0.04),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* Add subtle window transitions */
+.window:not(.dragging):not(.resizing) {
+  transition: 
+    transform 0.2s cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 0.2s cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Add very subtle inset shadow to titlebar */
+.window-titlebar {
+  position: relative;
+}
+
+.window-titlebar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(0, 0, 0, 0.01), 
+    rgba(0, 0, 0, 0.03) 20%,
+    rgba(0, 0, 0, 0.03) 80%,
+    rgba(0, 0, 0, 0.01)
+  );
+  pointer-events: none;
+}
+
+/* Clean scrollbars inside windows */
+.window-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.window-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Updated minimalist paper effect */
+.window {
+  background: linear-gradient(to bottom, 
+    rgba(255, 255, 255, 0.99), 
+    rgba(252, 252, 252, 0.99)
+  );
 }

@@ -88,6 +88,27 @@
   /* Window animation speeds */
   --window-transition-speed: 280ms;
   --window-animation-curve: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Window-specific paper variables */
+  --paper-window-bg: linear-gradient(to bottom, rgba(255, 255, 255, 0.99), rgba(252, 252, 252, 0.99));
+  --paper-window-border: rgba(0, 0, 0, 0.06);
+  --paper-window-shadow: 0 6px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+  --paper-window-shadow-active: 0 8px 28px rgba(0, 0, 0, 0.12), 0 1px 6px rgba(0, 0, 0, 0.05);
+  
+  /* Paper Window Color Palette - macOS-inspired but more subtle */
+  --window-close: #FF5F57;
+  --window-close-hover: #FF7B7B; 
+  --window-minimize: #FFBD2E;
+  --window-minimize-hover: #FFD561;
+  --window-maximize: #28C841;
+  --window-maximize-hover: #5DD85D;
+  
+  /* Paper texture opacity */
+  --paper-texture-opacity: 0.03;
+  
+  /* Paper skeleton loader colors */
+  --paper-skeleton-color: rgba(0, 0, 0, 0.04);
+  --paper-skeleton-highlight: rgba(0, 0, 0, 0.06);
 }
 
 /* Base Resets */
